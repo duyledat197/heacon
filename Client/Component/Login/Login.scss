@@ -1,0 +1,83 @@
+.body-loginBox{
+    width: 1366px;
+    height: 650px;
+    font-family: sans-serif;
+    font-weight: 600;
+    background: linear-gradient(#e9edf0, #dabadb);
+    /* background-image: url('./../statics/an9_TDCP.jpg'); */
+}
+
+
+.loginBox{
+    width: 320px;
+    height: 400px;
+    background-color: rgb(71, 72, 85);
+    color: #fff;
+    top: 15%;
+    left: 40%;
+    position: absolute;
+    border-radius: 20px;
+    box-sizing: border-box;
+    border: 2px solid #32c787;
+}
+
+.loginBox-buff{
+    margin: 22px;
+}
+
+.loginBox-title{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin : 25px;
+    font-size: 25px;
+    color: #e5908fea;
+}
+
+.loginBox-text{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 15px;
+    color: rgb(27, 201, 50);
+}
+// #dc3545;
+.loginBox-input{
+    border-radius: 3px; 
+    color: #ffffff;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #32c787;
+    padding-left: 10px;
+    width: 100%;
+    height: 35px;
+}
+
+
+
+#loginBox-button{
+    width: 100%;
+    border-radius: 10px;
+    background: #ff5652 ;
+    margin-top: 25px;
+    height: 40px;
+    border-color: transparent;
+    color: black;
+    font-weight: 600;
+    font-size: 17px;
+    transition: 0.2s;
+}
+
+#loginBox-button:hover{
+    border: 1px solid #ff5652;
+    background: rgb(34, 35, 39);
+    color: #ff5652;
+    font-weight: 600;
+    font-size: 17px;
+}
+.loginBox-link{
+    margin-top : 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}

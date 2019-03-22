@@ -1,0 +1,110 @@
+.signup-main{
+    background: linear-gradient(#e9edf0, #dabadb);
+    position: relative;
+}
+
+.signupBox{
+    background-color: rgb(71, 72, 85);
+    width: 70%;
+    height: 500px;
+    position: absolute;
+    top : 10%;
+    left: 15%;
+    border: 2px solid #32c787;
+    border-radius: 20px;
+    color: #fff;
+}
+.signup-content{
+    display : flex;
+    flex-direction: column;
+    padding: 50px 130px;
+    box-sizing: content-box;
+    justify-content: center;
+}
+.signup-line{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+.sigup-name{
+    display: flex;
+    flex-direction: row;
+    
+}
+
+.signupBox-text{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 15px;
+    color: rgb(27, 201, 50);
+    width: 130px;
+}
+.signupBox-input{
+    padding: 0px;
+    // padding-left: 10px;
+    box-sizing: content-box;
+    // border-radius: 3px; 
+    color: #ffffff;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #32c787;
+    height: 20px;
+}
+.signup-gender{
+    display: flex;
+    flex-direction: row;
+}
+.signup-radiogroup{
+    margin: 15px;
+    box-sizing: content-box;
+    // align-items: center;
+    display: flex;
+    flex-direction: row;
+}
+.signup-radio{
+    // opacity: 0;
+    text-decoration: none;
+    margin-left: 15px;
+    height: 25px;
+    width: 25px;
+    background: rgb(165, 71, 71);
+    cursor: pointer;
+    align-items: center;
+}
+.signup-radio:hover{
+    background-color: #ccc;
+}
+.sigupBox-text-gender{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0;
+    margin-left: 5px;
+}
+.signup-buttongroup{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+}
+.signup-button{
+    border-radius: 10px;
+    background: #ff5652 ;
+    margin-top: 25px;
+    margin-left: 10px;
+    height: 30px;
+    // border-color: transparent;
+    color: black;
+    font-weight: 600;
+    font-size: 17px;
+    transition: 0.2s;
+    width: 100px;
+    border: 1px solid transparent;
+}
+.signup-button:hover{
+    border: 1px solid #ff5652;
+    background: rgb(34, 35, 39);
+    color: #ff5652;
+    // font-weight: 600;
+}
