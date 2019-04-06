@@ -5,6 +5,8 @@ var userModel = require('./../../models/userModel');
 var uid = require('uid');
 var bcrypt = require('bcrypt');
 var fs = require('fs');
+var infoModel = require('./../../models/infoUserModel');
+var friendModel = require('./../../models/friendModel');
 // var privateKey = fs.readFileSync('./private.key');
 router.post('/', (req, res) => {
     console.log(JSON.stringify(req.body));
@@ -12,7 +14,7 @@ router.post('/', (req, res) => {
     userModel.findOne({userName : req.body.userName}, (err, user) => {
         if(!err) {
             if(user) {
-                res.status(200).json({
+                res.status(200).json({  
                     success : false,
                     text : "Tài khoản tồn tại"
                 })
@@ -23,12 +25,35 @@ router.post('/', (req, res) => {
                 bcrypt.hash( req.body.password, 10, (err, hash) => {
                     if(!err){
                         let userTempt = new userModel();
+                        
                         userTempt.userName = req.body.userName;
                         userTempt.password = hash;
-                        userTempt.idUser = uid(10);
+                        userTempt.id = uid(10);
                         userTempt.save((err) => {
                             if(err) res.status(500).json(err);
-                            else res.status(200).json({success : true});
+                            else {
+                                let infoTempt = new infoModel();
+                                // res.status(200).json({success : true});
+                                infoTempt.id = userTempt.id;
+                                infoTempt.birthday = Date.parse(req.body.birthday);
+                                // console.log(infoTempt.birthday);
+                                
+                                infoTempt.firstName = req.body.firstName;
+                                infoTempt.lastName = req.body.lastName;
+                                infoTempt.gender = req.body.gender;
+                                infoTempt.save((err) => {
+                                    if(err) res.status(500).json(err);
+                                    else {
+                                        var friend = new friendModel();
+                                        friend.id = userTempt.id
+                                        friend.save((err) => {
+                                            if(err) res.status(500).json(err);
+                                            else res.status(200).json({success : true});
+                                        })
+                                        
+                                    }
+                                });
+                            }
                         })
                     }
                     else res.status(500).json(err);

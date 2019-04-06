@@ -7,12 +7,14 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/testDB');
 var bodyParser = require('body-parser');
 var mainController = require('./api/routes/homeRoute');
+var excuteRTC = require('./api/RTC/socketIO');
 var cors = require('cors');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
-mainController(app, io);
-
+// app.use(app.router);
+mainController(app);
+excuteRTC(io);
 var port = process.env.PORT | 3000;
 
 // app.use('/message',(req,res,next) =>{

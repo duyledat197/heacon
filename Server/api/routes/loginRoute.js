@@ -16,7 +16,7 @@ router.post('/', (req, res) => {
                 if(resq) {
                 //    var tokenn =  jwt.sign({exp: Math.floor(Date.now() / 1000) + (60 * 60), data : user.id }, "privateKey")
                 jwt.sign({
-                    id : user.idUser
+                    id : user.id
                   }, privateKey , { expiresIn: Math.floor(Date.now() / 1000) + (60 * 60) }, (errr,token) => {
                         if(!errr) res.status(200).json({token : token, success : true});
                         else res.status(500).json(erer);

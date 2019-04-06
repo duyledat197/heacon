@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './Message.scss';
+var base64 = require('base-64');
+var constant = require('./../../static/constant');
 var myInfo = {
     id : "12321312312",
     name : "Lê Văn Thành"
@@ -53,13 +55,13 @@ var chat_message = [
     { id : "12321312312", text : "suốt ngày bệnh" },
     { id : "12321312313", text : "cmm" },
 ]
-const PropFriendMassage = (props) => (
+const PropFriendMessage = (props) => (
     <div className="friend-massage-square">
         <div className="friend-massage-avatar-info">
-            <img src={props.friend.avatar.imgSmall} className="friend-message-avatar"/>
+        <img src="./static/Atommk.jpg" className="friend-message-avatar"/>
             <div className="friend-massage-info">
-                <div className="friend-massage-name"> {props.friend.name}</div>
-                <div className="friend-massage-lastMassage"> { props.lastMassage }</div>    
+                <div className="friend-massage-name"> {props.id}</div>
+                <div className="friend-massage-lastMassage"> { props.lastMessage }</div>    
                 <div className="friend-massage-lastTime"> { props.lastTime }</div>
             </div>
         </div>
@@ -67,6 +69,48 @@ const PropFriendMassage = (props) => (
         
     </div>
 )
+class ChatSquare extends Component {
+    async componentDidMount(){
+        // var chat_message;
+        // await axios.post(constant.server, {token : this.props.token, idfriend : this.props.idfriend}).then(resp => {
+        //     chat_message = resp.data;
+        //     console.log(chat_message);
+        //     this.setState({chat_message : chat_message})
+        // })
+
+        // {this.state.chat_message.map(e => (
+        //     <PropMessageChat {...e} />
+        // ))}
+    }
+    render () {
+        return (
+            <div className="chat-friend-online-container">
+                <div className="chat-container">
+                    <div className="chat-container-name">Tên Cuộc Trò Chuyện</div>
+                    <div className="chat-container-content">
+                        { chat_message.map( e => (
+                            <PropMessageChat {...e} />
+                        ))}
+                    </div>
+                    <div className="chat-container-text-input">
+                        <div className="chat-container-text-input-left">
+                            <div className="chat-container-text-input-left-buff">
+                                <input className="chat-container-text-input-input"/>
+                            </div>
+                            <div className="chat-container-text-input-left-buff-button">
+                                <button className="chat-container-text-input-button"> <img src="./static/icon_send.png" /> </button>
+                            </div>
+                        </div>
+                        <div className="chat-container-text-input-right">
+                                <CallButton/>
+                            <VideoCallButton/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+}
 function findNamebyId(id){
     var findName = friendMassage.find((e) => {
         return e.id == id;
@@ -118,41 +162,74 @@ class VideoCallButton extends Component{
 }
 
 class Message extends Component {
+    constructor(props){
+        super(props);
+        this.state={
+            friendMessage : [],
+            idClient : '',
+            isloadData : false
+        }
+    }
+    getToken(){
+        var tokenEncoded = localStorage.getItem('token');
+        var token = base64.decode(tokenEncoded);
+        return token;
+    }
+    async componentDidMount() {        
+        if(this.state.isloadData == false) {
+            var token = await this.getToken();
+            // var clientInfo;
+            // const fetchInfo = await fetch(constant.server + '/info', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Accept': 'application/json',
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({token : token})
+            // });
+            // clientInfo = await fetchInfo.json();
+        //     var friendMessage = [];
+            // this.setState({isloadData : true});
+            const fetchFriend = await  fetch( constant.server + '/message/friend' , {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({token : token}) })
+                .then(resp => resp.json())
+                .then(json => {
+                    console.log(json);
+                    console.log(json.id);
+                    
+                    this.setState({
+                         friendMessage : [...json.friend],
+                        idClient : json.id,
+                        isloadData: true
+                    });
+
+                })
+        }
+        
+    }
     render () {
-        return (
+        if(this.state.isloadData === false) return false;
+        else {
+           console.log(this.state.friendMessage);
+           
+            return (
             <div className="message-container">
                 <div className="friend-massage-container">
-                    { friendMassage.map( e => (
-                        <PropFriendMassage {...e}/>
-                    ))}
+                    { this.state.friendMessage.map( e => {
+                        return   <PropFriendMessage {...e} key={e._id}/>
+                    }
+                    )}
                 </div>
-                <div className="chat-friend-online-container">
-                    <div className="chat-container">
-                        <div className="chat-container-name">Tên Cuộc Trò Chuyện</div>
-                        <div className="chat-container-content">
-                           { chat_message.map( e => (
-                               <PropMessageChat {...e} />
-                            ))}
-                        </div>
-                        <div className="chat-container-text-input">
-                            <div className="chat-container-text-input-left">
-                                <div className="chat-container-text-input-left-buff">
-                                    <input className="chat-container-text-input-input"/>
-                                </div>
-                                <div className="chat-container-text-input-left-buff-button">
-                                    <button className="chat-container-text-input-button"> <img src="./static/icon_send.png" /> </button>
-                                </div>
-                            </div>
-                            <div className="chat-container-text-input-right">
-                                  <CallButton/>
-                                <VideoCallButton/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <ChatSquare/>
             </div>
         )
     }
+}
 }
 
 export default Message

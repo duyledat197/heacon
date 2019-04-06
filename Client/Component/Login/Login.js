@@ -2,20 +2,29 @@ import React, { Component } from 'react'
 import './Login.scss'
 import BackGround from './../BackGround/BackGround'
 var base64 = require('base-64');
-
-
+// import Link from 'next/link'
+import Router from 'next/router'
 import axios from 'axios'
+var constant = require('./../../static/constant');
 class LogInComponent extends Component {
     handleClickLogin(e){
         let userName = document.getElementById('login-id').value;
         let password = document.getElementById('login-password').value;
-        axios.post('http://localhost:3000/login',{
+        axios.post(constant.server + '/login',{
             userName,
             password
         }).then((resp) => {
+            console.log(resp.data);
+            
             var encodedData = base64.encode(resp.data.token);
             localStorage.setItem("token", encodedData);
-            location.replace('/message/' + encodedData);
+            // console.log(resp.data.token);
+            
+            // location.replace('/');
+            Router.push({
+                pathname: '/',
+                query: { token: encodedData }
+            });
             
         }).catch((err) => {
             alert(err.toString());

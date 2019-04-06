@@ -10,17 +10,18 @@
   "author": "Imex",
   "license": "ISC",
   "dependencies": {
-    "@blueprintjs/core": "^3.0.1",
+    "@blueprintjs/core": "^3.15.0",
     "@zeit/next-sass": "^0.2.0",
     "axios": "^0.18.0",
     "base-64": "^0.1.0",
-    "express": "^4.16.3",
-    "isomorphic-unfetch": "^2.1.0",
+    "express": "^4.16.4",
+    "isomorphic-unfetch": "^2.1.1",
     "jquery": "^3.3.1",
-    "next": "^6.1.1",
-    "node-sass": "^4.9.2",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "next": "^6.1.2",
+    "node-sass": "^4.11.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-router-dom": "^5.0.0",
     "socket.io-client": "^2.2.0"
   }
 }

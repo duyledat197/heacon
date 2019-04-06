@@ -1,12 +1,12 @@
 var loginRoute = require('./loginRoute');
 var signUpRoute = require('./signUpRoute');
 var messageRoute = require('./messageRoute');
-module.exports = function(app,io){
+var infoUserRoute = require('./infoUserRoute')
+var connectRoute = require('./connectRoute');
+module.exports = function(app){
     app.use('/login', loginRoute);
     app.use('/signup', signUpRoute);
-    app.use('/message',(req,res,next) =>{
-            req.io = io;
-            next();
-        }, messageRoute);
-    
+    app.use('/info',infoUserRoute);
+    app.use('/message',messageRoute);
+    app.use('/connect',connectRoute);
 }

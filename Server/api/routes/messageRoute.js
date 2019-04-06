@@ -3,7 +3,19 @@ var router = express.Router();
 var messageModel = require('../../models/messageModel');
 var jwt = require('jsonwebtoken');
 var fs = require('fs');
-var privateKey = fs.readFileSync('./private.key')
+var privateKey = fs.readFileSync('./private.key');
+var authenticate = require('./authenticateRoute');
+var friendModel = require('./../../models/friendModel');
+router.use(authenticate);
+router.post('/friend', (req, res) => {
+    friendModel.findOne({id : req.id}).then(data => {
+        console.log(data);
+        res.status(200).json(data);
+    }).catch(err => {
+        res.status(500).json(err);
+    })
+})
+
 router.post('/', (req, res) => {
     // messageModel.find({id : req.body.id})
     // .then((data) => {
@@ -12,27 +24,22 @@ router.post('/', (req, res) => {
     // .catch((err) => {
     //     res.status(500).json(err);
     // })
-    console.log(req.body.token);
-    
-    jwt.verify(req.body.token, privateKey, (err, decoded) => {
-        
-        if(err) res.status(500).json(err);
-        else console.log(decoded);
-        
-        
-    })
-    // console.log(req.io);
-    
-    req.io.on('connection', (socket) => {
-        socket.on('CLIENT_SEND_MESSAGE', (data) => {
-            jwt.verify(data.token, 'PUBLIC_KEY', (err, decoded) => {
-                if(err) socket.emit('ERROR', err);
-                else {
-                    socket.to(data.friend.id).emit('CLIENT_SEND_TO_FRIEND', data);
-                }
+    if(req.err) res.status(500).json(err);
+    else {
+        messageModel.find({ id : req.body.id}).then( messageInfo => {
+            messageInfo.friend.find({id : req.idfriend}).then(friend => {
+                var message = friend.message;
+                friend.message.find({}).last(10).then(message => {
+                    res.status(200).json(message);
+                }).catch(err => {
+                    res.status(500).json(err);
+                })  
+            }).catch(err => {
+                res.status(500).json(err);
             })
         })
-    })    
+    }
+      
 })
 
 module.exports = router;

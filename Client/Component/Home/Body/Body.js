@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import './Body.scss'
-
+import Wait from './../Wait/Wait'
 var content = [
     "Bạn Muốn Hẹn Hò",
     "Bạn Muốn Có Gấu",
@@ -11,7 +11,10 @@ class Body extends Component {
         super(props);
     }
     componentWillMount(){
-        this.setState({count : 0});
+        this.setState({
+            count : 0,
+            isConnect : false
+        });
     }
     componentDidMount(){
         setTimeout(
@@ -35,13 +38,26 @@ class Body extends Component {
             1200
         );
     }
+    handleConnect(){
+        if(this.props.isLogin) this.setState({isConnect : true});
+        else {
+            location.replace('/login');
+        }
+    }
+    handleDisConnect(){
+        this.setState({isConnect : false});
+    }
     render () {
         return (
             <div className="body-main">
             
-            <div className="body-title"> Heart Connection </div>
+                <div className="body-title"> Heart Connection </div>
                 <div className="body-text"> { content[this.state.count] } </div>
-                <button className="body-button"><i class="fas fa-heart"></i> </button>
+                <button className="body-button" onClick={(e) => this.handleConnect()}><i class="fas fa-heart"></i> </button>
+                {/* <div className={this.state.isConnect ? "" : "display-none"}>
+                    <Wait handleDisConnect={ this.handleDisConnect}/>
+                </div> */}
+                { this.state.isConnect ? <Wait handleDisConnect={ this.handleDisConnect} changeLink={this.props.changeLink}/> : null }
             </div>
             
         )

@@ -15,6 +15,11 @@ app.prepare()
     app.render(req, res, actualPage, queryParams)
   })
 
+  server.get('/message/:token', (req, res) => {
+    console.log(req.params.token);
+    
+    return app.render(req, res, '/message/:token', { token: req.params.token })
+  })
   server.get('*', (req, res) => {
     return handle(req, res)
   })
