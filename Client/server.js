@@ -1,6 +1,5 @@
 const express = require('express')
 const next = require('next')
-
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
@@ -8,17 +7,14 @@ var port = process.env.port || 3301;
 app.prepare()
 .then(() => {
   const server = express()
-
-  server.get('/p/:id', (req, res) => {
+  server.get('/p/:id', (req, res) => {  
     const actualPage = '/post'
     const queryParams = { id: req.params.id } 
     app.render(req, res, actualPage, queryParams)
   })
-
-  server.get('/message/:token', (req, res) => {
-    console.log(req.params.token);
-    
-    return app.render(req, res, '/message/:token', { token: req.params.token })
+  server.get('/message/:id', (req, res) => {
+    console.log("serverid: "+req.params.id);
+    return app.render(req, res, '/message', { id: req.params.id })
   })
   server.get('*', (req, res) => {
     return handle(req, res)

@@ -8,11 +8,11 @@ var constant = require('./../static/constant');
 var base64 = require('base-64');
 import axios from 'axios'
 class Home extends Component {
-//     static async getInitialProps({ query }){
-//     if(query.token){
+//     static async getInitialProps({ param }){
+//     if(param.token){
 //            var isLogin = false;
 //            var info;
-//            var token = base64.decode(query.token);
+//            var token = base64.decode(param.token);
 //         //    console.log(token);
            
 //        await axios.post( constant.server + '/info',{token : token}).then(resp => {
@@ -39,10 +39,9 @@ class Home extends Component {
             info : ''
         }
     }
-    changeLink(path,query){
-        console.log(query);
-        
-        location.replace(path + '?id=' + query.id);
+    changeLink(path,param){
+        console.log(param);  
+        location.replace(path + '/' + param.id);
     }
     async componentDidMount(){
         var localStorageToken = localStorage.getItem('token');

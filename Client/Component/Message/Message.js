@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import './Message.scss';
 import { Route, BrowserRouter } from 'react-router-dom'
+import ChatSquare from './ChatSquare';
+import FriendMessageBox from './FriendMessageBox';
 var base64 = require('base-64');
 var constant = require('./../../static/constant');
-import CallButton from './CallButton';
-import ChatSquare from './ChatSquare';
-import PropFriendMessage from './PropFriendMessage';
-import PropMessageChat from './PropMessageChat';
-import VideoCallButton from './VideoCallButton';
 // var myInfo = {
 //     id : "12321312312",
 //     name : "Lê Văn Thành"
@@ -122,23 +119,22 @@ export default class Message extends Component {
         }
     }
     render() {
+        console.log(this.props.id);
+
         if (this.state.isloadData === false) return false;
         else {
             console.log(this.state.friendMessage);
-            // var ChatSquareClone = React.cloneElement(<ChatSquare/>, {token: this.getToken()})
             return (
-                <BrowserRouter>
-                    <div className="message-container">
-                        <div className="friend-massage-container">
-                            {this.state.friendMessage.map(e => {
-                                return <PropFriendMessage {...e} key={e._id} />
-                            }
-                            )}
-                        </div>
-                        {/* <Route pathname="/message" component={ChatSquare} /> */}
+                <div className="message-container">
+                    <div className="friend-massage-container">
+                        {this.state.friendMessage.map(e => {
+                            return <FriendMessageBox {...e} key={e._id} />
+                        }
+                        )}
                     </div>
-                </BrowserRouter>
-            )   
+                    <ChatSquare id={this.props.id} />
+                </div>
+            )
         }
     }
 }

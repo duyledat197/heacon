@@ -1,0 +1,100 @@
+.chat-friend-online-container{
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+}
+.chat-container{
+    width: 84%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid blue;
+}
+.chat-container-content{
+    height: 520px;
+    border: 1px solid red;
+}
+.chat-container-name{
+    border-bottom: 1px solid rgb(128, 122, 122);
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 40px;
+    font-size: 22px;
+    color: rgb(121, 110, 110);
+}
+
+.chat-container-text-input{
+    display: flex;
+    flex-direction: row;
+    height: 36px;
+}
+.chat-container-text-input-left{
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+    // justify-content: center;
+}
+.chat-container-text-input-left-buff{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 80%;
+}
+.chat-container-text-input-input{
+    margin-left: 20px;
+    
+    border: 1px solid grey;
+    border-radius: 20px;
+    height: 80%;
+    padding: 5px;
+    padding-left: 10px;
+    color: black;
+}
+.chat-container-text-input-left-buff-button{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+.chat-container-text-input-button{
+    text-decoration: none;
+    // height: 80%;
+    // display: flex;
+    // flex-direction: column;
+    // justify-content: center;
+    // border-radius: 45px;
+    // width: 40px;
+    // height: 40px;
+    // background-color: aqua;
+    // color: white;
+    border:none;
+    margin-left: 3px;
+    box-sizing: content-box;
+    transform: rotate(45deg);
+    // height: 31;
+    // width: 30px;
+    border-radius: 90%;
+    padding: 0px;
+    // border: 1px solid red;
+    // border: 1px solid red;
+}
+.chat-container-text-input-right{
+    width: 30%;
+    height: 36;
+    display: flex;
+    flex-direction: row;
+}
+.chat-container-text-input-right-button{
+    text-decoration: none;
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+    // border: 0px;
+    border: none;
+    margin: 0px;
+    box-sizing: content-box;
+    margin-left: 3px;
+    border-radius: 90%;
+    
+}

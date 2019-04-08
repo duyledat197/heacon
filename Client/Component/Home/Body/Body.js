@@ -58,7 +58,8 @@ class Body extends Component {
                 {/* <div className={this.state.isConnect ? "" : "display-none"}>
                     <Wait handleDisConnect={ this.handleDisConnect}/>
                 </div> */}
-                {this.state.isConnect ? <Wait handleDisConnect={this.handleDisConnect} changeLink={this.props.changeLink} /> : null}
+                {this.state.isConnect ? <Wait handleDisConnect={this.handleDisConnect} 
+                changeLink={this.props.changeLink} /> : null}
             </div>
 
         )
