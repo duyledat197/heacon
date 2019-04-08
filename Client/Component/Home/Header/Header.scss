@@ -24,7 +24,14 @@
     // align-items: baseline;
     padding: 12px 15px;
 }
-
+.header-info{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 50%;
+    padding: 12px 15px;
+    position: relative;
+}
 // .header-col{
 //     display: flex;
 //     flex-direction: column;
@@ -66,4 +73,10 @@
 }
 .display-none{
     display: none;
+}
+.friend-message-avatar{
+    border-radius: 90%;
+    width: 50px;
+    height: 50px;
+    border: 1px solid red;
 }

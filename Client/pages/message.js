@@ -7,14 +7,15 @@ class MessagePage extends Component {
             id : query.id
         }
     }
-    componentWillMount(){
+    componentDidMount(){
         // console.log(this.props);
+        // location.reload("/" + this.props.query.id);
         
     }
     render () {
         return (
             <div>
-                <Message { ...this.props.id}/>
+                <Message/>
             </div>
         )
     }

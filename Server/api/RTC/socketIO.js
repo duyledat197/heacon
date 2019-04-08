@@ -49,26 +49,29 @@ module.exports = function(io){
                         if(Female.length > 0){
                             // console.log( 'female : ' + Female[0]);
                             var friendId = Female[0].id;
+                            var friendName = Female[0].name;
                             socket.emit('FIND_OUT', Female[0].id);
                             io.to(Female[0].socketID).emit('FIND_OUT', info.id);
                             var lastTime = Date.now();
                             
-                            friendModel.findOne({'id' : friendId}, (err, user) => {
+                            friendModel.findOne({id : friendId}, (err, user) => {
                                 if(!err) {
-                                    console.log(user);
+                                    // console.log(listuser);
                                     
                                    user.friend.push({
                                         id : info.id,
+                                        name : info.firstName + " " + info.lastName,
                                         lastMessage : "Xin Chao !!!",
                                         lastTime : lastTime
                                     })
                                     user.save();
                                 }
                             })
-                            friendModel.findOne({'id' : info.id}, (err, user) => {
+                            friendModel.findOne({id : info.id}, (err, user) => {
                                 if(!err) {
                                     user.friend.push({
                                         id : friendId,
+                                        name : friendName,
                                         lastMessage : 'Xin Chao !!!',
                                         lastTime : lastTime
                                     })
@@ -77,12 +80,13 @@ module.exports = function(io){
                             })
                             Female.shift();
                         }
-                        else Male.push({id : info.id, socketID : socket.id});
+                        else Male.push({id : info.id, socketID : socket.id, name : info.firstName + " " + info.lastName});
                     }
                     else {
                         if(Male.length > 0){    
-                            console.log('male :' + Male[0].id);
-                            
+                            // console.log('male :' + Male[0].id);
+                            var friendId = Male[0].id;
+                            var friendName = Male[0].name;
                             socket.emit('FIND_OUT', Male[0].id);
                             io.to(Male[0].socketID).emit('FIND_OUT', info.id);
                             console.log(info.id);
@@ -90,29 +94,31 @@ module.exports = function(io){
                             
                             // console.log(Male[0].id);
                             
-                            // friendModel.findOne({'id' : Male[0].id}, (err, friend) => {
-                            //     // if(!err) {
-                            //     //     friend.push({
-                            //     //         id : info.id,
-                            //     //         lastMessage : "Xin Chao !!!",
-                            //     //         lastTime : lastTime
-                            //     //     })
-                            //     //     friendModel.save();
-                            //     // }
-                            // })
-                            // friendModel.findOne({'id' : info.id}, (err, friend) => {
-                            //     // if(!err) {
-                            //     //     friend.push({
-                            //     //         id : Male[0].id,
-                            //     //         lastMessage : "Xin Chao !!!",
-                            //     //         lastTime : lastTime
-                            //     //     })
-                            //     //     friendModel.save();
-                            //     // }
-                            // })
+                            friendModel.findOne({id : friendId}, (err, friend) => {
+                                if(!err) {
+                                    friend.push({
+                                        id : info.id,
+                                        name : firstName + " " + lastName,
+                                        lastMessage : "Xin Chao !!!",
+                                        lastTime : lastTime
+                                    })
+                                    friendModel.save();
+                                }
+                            })
+                            friendModel.findOne({id : info.id}, (err, friend) => {
+                                if(!err) {
+                                    friend.push({
+                                        id : friendId,
+                                        name : friendName,
+                                        lastMessage : "Xin Chao !!!",
+                                        lastTime : lastTime
+                                    })
+                                    friendModel.save();
+                                }
+                            })
                             Male.shift();
                         }
-                        else Female.push({id : info.id, socketID : socket.id});
+                        else Female.push({id : info.id, socketID : socket.id, name : info.firstName + " " + info.lastName});
                     }
                 }
             })

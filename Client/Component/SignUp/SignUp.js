@@ -81,7 +81,7 @@ class SignUp extends Component {
                             <input className="signupBox-input" type="date" id="birthday"/>
                         </div>
                         <div className="signup-buttongroup">
-                            <button  className="signup-button" type="button" onClick={() => this.handleSignUp()}> Đăng Ký </button>
+                            <button  className="signup-button" type="button" onClick={(e) => this.handleSignUp()}> Đăng Ký </button>
                             <button type="reset" className="signup-button"> Nhập Lại </button>
                         </div>
                     </div>

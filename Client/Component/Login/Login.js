@@ -23,7 +23,7 @@ class LogInComponent extends Component {
             // location.replace('/');
             Router.push({
                 pathname: '/',
-                query: { token: encodedData }
+                // query: { token: encodedData }
             });
             
         }).catch((err) => {

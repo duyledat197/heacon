@@ -7,6 +7,8 @@ router.use('/', (req,res,next) => {
     // console.log(req);
     
     jwt.verify(req.body.token, privateKey,(err, decoded) => {
+        // console.log(err);
+        
         if(err) req.error = err;
         else req.id = decoded.id;
         // console.log(decoded);

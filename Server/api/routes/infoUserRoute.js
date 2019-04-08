@@ -4,7 +4,9 @@ var infoUserModel = require('./../../models/infoUserModel');
 var authenticate = require('./authenticateRoute')
 router.use(authenticate);
 router.post('/',(req,res) => {
-    if(req.err) res.status(500).json(err);
+    // console.log(req.error);
+    
+    if(req.error) res.status(500).json(error);
     else {
         // console.log(req.id);
         infoUserModel.findOne({id : req.id}, (err, info) => {
