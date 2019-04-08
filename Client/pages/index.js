@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Header from './../Component/Home/Header/Header'
 import Body from './../Component/Home/Body/Body'
+import './index.scss'
 import Router from 'next/router'
 // import BackGround from './../Component/BackGround/BackGround'
 var constant = require('./../static/constant');
@@ -62,7 +63,7 @@ class Home extends Component {
     }
     render () {
         return (
-            <div>
+            <div className="main-cantainer">
                 {/* <BackGround/> */}
                 <Header {...this.state}/>
                 <Body {...this.state} changeLink={this.changeLink}/>

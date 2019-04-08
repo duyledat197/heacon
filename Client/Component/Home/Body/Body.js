@@ -7,59 +7,60 @@ var content = [
     "Bạn Muốn Người Yêu"
 ]
 class Body extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
     }
-    componentWillMount(){
+    componentWillMount() {
         this.setState({
-            count : 0,
-            isConnect : false
+            count: 0,
+            isConnect: false
         });
     }
-    componentDidMount(){
+    componentDidMount() {
         setTimeout(
-            function() {
+            function () {
                 this.setState(prevState => ({
-                    count : (prevState.count + 1) % 3
+                    count: (prevState.count + 1) % 3
                 }));
             }
-            .bind(this),
+                .bind(this),
             1200
         );
     }
-    componentDidUpdate(){
+    componentDidUpdate() {
         setTimeout(
-            function() {
+            function () {
                 this.setState(prevState => ({
-                    count : (prevState.count + 1) % 3
+                    count: (prevState.count + 1) % 3
                 }));
             }
-            .bind(this),
+                .bind(this),
             1200
         );
     }
-    handleConnect(){
-        if(this.props.isLogin) this.setState({isConnect : true});
+    handleConnect() {
+        if (this.props.isLogin) this.setState({ isConnect: true });
         else {
             location.replace('/login');
         }
     }
-    handleDisConnect(){
-        this.setState({isConnect : false});
+    handleDisConnect() {
+        this.setState({ isConnect: false });
     }
-    render () {
+    render() {
         return (
             <div className="body-main">
-            
-                <div className="body-title"> Heart Connection </div>
-                <div className="body-text"> { content[this.state.count] } </div>
+                <div>
+                    <div className="body-title"> Heart Connection </div>
+                    <div className="body-text"> {content[this.state.count]} </div>
+                </div>
                 <button className="body-button" onClick={(e) => this.handleConnect()}><i class="fas fa-heart"></i> </button>
                 {/* <div className={this.state.isConnect ? "" : "display-none"}>
                     <Wait handleDisConnect={ this.handleDisConnect}/>
                 </div> */}
-                { this.state.isConnect ? <Wait handleDisConnect={ this.handleDisConnect} changeLink={this.props.changeLink}/> : null }
+                {this.state.isConnect ? <Wait handleDisConnect={this.handleDisConnect} changeLink={this.props.changeLink} /> : null}
             </div>
-            
+
         )
     }
 }

@@ -3,35 +3,51 @@ import './Header.scss'
 var base64 = require('base-64');
 import Router from 'next/router'
 class Header extends Component {
-    constructor(props){
-        super(props);
-        // this.setState({isLogin : false});
+    state = {
+        header_info_menu: false,
     }
-    componentWillMount(){
+    componentWillMount() {
         console.log(this.props.info);
-        
+
     }
-    handleClick(s){
-        
+    handleClickRedirect(s) {
+
         location.replace('/' + s);
+
+    }
+    handleHeaderInfoMenuClick = () => {
+        this.setState({
+            header_info_menu: !this.state.header_info_menu
+        })
+    }
+    handleLogout = () =>{
         
     }
-    render () {
+    render() {
         return (
             <div className="header-row">
                 <div className="header-start">
-                <div className="header-brand"> HeaCon</div>
-                {/* <div className="header-col"> Hello</div> */}
+                    <div className="header-brand"> HeaCon</div>
+                    {/* <div className="header-col"> Hello</div> */}
                 </div>
-                <div className={ this.props.isLogin ? "display-none":"header-end"}>
-                    <button className="header-button" onClick={e => this.handleClick('login')}> Log In</button>
-                    <button className="header-button" onClick={e => this.handleClick('signup')}> Sign Up</button>
-                </div>
-                <div className={ this.props.isLogin ? "header-info":"display-none"}>
-                     <img src="./static/Atommk.jpg" className="friend-message-avatar"/>
-                     {/* <div ></div> */}
-                </div>
-                
+                {/* for not login user */}
+                {(!this.props.isLogin) && <div className="header-end">
+                    <button className="header-button" onClick={e => this.handleClickRedirect('login')}> Log In</button>
+                    <button className="header-button" onClick={e => this.handleClickRedirect('signup')}> Sign Up</button>
+                </div>}
+                {/* for login user */}
+                {this.props.isLogin && <div className="header-info">
+                    <div className="header-setting-button"
+                    onClick= {() => this.handleHeaderInfoMenuClick()}
+                    >
+                        <img src="./static/Atommk.jpg" className="friend-message-avatar" />
+                        <div className={"header-setting-menu" + (this.state.header_info_menu ? "" : " disable")}>
+                            <p className="setting-button">Information</p>
+                            <p className="setting-button">Profile</p>
+                            <p className="setting-button">Logout</p>
+                        </div>
+                    </div>
+                </div>}
             </div>
         )
     }
