@@ -136,15 +136,16 @@ module.exports = function(io){
             jwt.verify(data.token, privateKey, (err, decoded) => {
                 if(err) socket.emit('ERROR', err);
                 else {
-                    messageModel.find({ id : data.message.id}, (err, infoMessage) => {
+                   var date = Date.now()
+                    messageModel.find({ id : data.friendId}, (err, infoMessage) => {
                         if(err) socket.emit('ERROR', err);
                         else {
                             var message = {
                                 id : uid(10),
                                 text : data.text,
-                                date : Date.now()
+                                date : date
                             }
-                            var position = infoMessage.indexOf(infoMessage.friend.filter(e => e.id == data.friendId));
+                            var position = infoMessage.indexOf(infoMessage.friend.filter(e => e.id == decoded.id));
                             messageModel.friend[position].message.push(message)
                             // let message = {
                             //     id : idMessage,
@@ -174,22 +175,23 @@ module.exports = function(io){
                         }
                     })
                      
-                    messageModel.find({ id : decoded.id}, (err, listfriend) =>{
+                    messageModel.find({ id : decoded.id}, (err, infoMessage) =>{
                         if(err) socket.emit('ERROR', err);
                         else {
-                            listfriend.find({id : data.message.id}, (err, friend) => {
-                                if(err) socket.emit('ERROR', err);
-                                else {
-                                    let message = {
-                                        id : idMessage,
-                                        text : data.message.text,
-                                        date : data.message.date
-                                    }
-                                    friend.push(message);
-                                    listfriend.save((err) => {
-                                        if(err) socket.emit('ERROR', err);
-                                    });
-                                }
+                            var message = {
+                                id : uid(10),
+                                text : data.text,
+                                date : date
+                            }
+                            var position = infoMessage.indexOf(infoMessage.friend.filter(e => e.id == data.friendId));
+                            messageModel.friend[position].message.push(message)
+                            // let message = {
+                            //     id : idMessage,
+                            //     text : data.message.text,
+                            //     date : data.message.date
+                            // }
+                            infoMessage.save((err) => {
+                                socket.emit('ERROR', err);
                             })
                         }
                     })
