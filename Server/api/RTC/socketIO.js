@@ -5,6 +5,7 @@ var friendModel = require('./../../models/friendModel');
 var fs = require('fs');
 var jwt = require('jsonwebtoken')
 var privateKey = fs.readFileSync('./private.key');
+var map = {};
 var Male = [];
 var Female = [];
 var uid = require('uid');
@@ -123,42 +124,57 @@ module.exports = function(io){
                 }
             })
         })
+        socket.on('CONNECT_MESSAGE', (data) => {
+            jwt.verify(data.token, privateKey, (err, decoded) => {
+                if(err) socket.emit('ERROR', err);
+                else {
+                    map[decoded.id] = socket.id;
+                }
+            })
+        })
         socket.on('CLIENT_SEND_MESSAGE', (data) => {
             jwt.verify(data.token, privateKey, (err, decoded) => {
                 if(err) socket.emit('ERROR', err);
                 else {
-                    let idMessage = uid(10);
-                    
-                    let date = Date.now();
-                    messageModel.find({ id : data.message.id}, (err, listfriend) => {
+                    messageModel.find({ id : data.message.id}, (err, infoMessage) => {
                         if(err) socket.emit('ERROR', err);
                         else {
+                            var message = {
+                                id : uid(10),
+                                text : data.text,
+                                date : Date.now()
+                            }
+                            var position = infoMessage.indexOf(infoMessage.friend.filter(e => e.id == data.friendId));
+                            messageModel.friend[position].message.push(message)
                             // let message = {
                             //     id : idMessage,
                             //     text : data.message.text,
                             //     date : data.message.date
                             // }
-                        
-                           
-                            listfriend.findOne({id : decoded},(err, friend) => {
-                                if(err) socket.emit('ERROR', err);
-                                else {
-                                    let message = {
-                                        id : idMessage,
-                                        text : data.message.text,
-                                        date : data.message.date
-                                    }
-                                    friend.push(message);
-                                    listfriend.save((err) => {
-                                        if(err) socket.emit('ERROR', err);
-                                    });
-                                }
-
+                            infoMessage.save((err) => {
+                                socket.emit('ERROR', err);
                             })
+                           
+                            // listfriend.findOne({id : decoded.id},(err, friend) => {
+                            //     if(err) socket.emit('ERROR', err);
+                            //     else {
+                            //         let message = {
+                            //             id : idMessage,
+                            //             text : data.message.text,
+                            //             date : data.message.date
+                            //         }
+                            //         friend.push(message);
+                            //         listfriend.save((err) => {
+                            //             if(err) socket.emit('ERROR', err);
+                            //         });
+                            //     }
+
+                            // })
+
                         }
                     })
                      
-                    messageModel.find({ id : decoded}, (err, listfriend) =>{
+                    messageModel.find({ id : decoded.id}, (err, listfriend) =>{
                         if(err) socket.emit('ERROR', err);
                         else {
                             listfriend.find({id : data.message.id}, (err, friend) => {
