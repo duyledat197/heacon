@@ -7,11 +7,9 @@ export default  class VideoCallButton extends Component {
     }
     render() {
         return (
-            <div className="chat-container-text-input-left-buff-button">
-                <button className="chat-container-text-input-right-button" onClick={(e) => this.newCamera()}>
-                    <img src="./static/videocall.jpg" width="100%" />
-                </button>
-            </div>
+                <div className={this.props.className} onClick={(e) => this.newCamera()}>
+                    {this.props.children}
+                </div>
         )
     }
 }

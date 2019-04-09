@@ -74,7 +74,8 @@ export default class Message extends Component {
         this.state = {
             friendMessage: [],
             idClient: '',
-            isloadData: false
+            isloadData: false,
+            SelectedBoxId: null,
         }
     }
     getToken() {
@@ -106,13 +107,13 @@ export default class Message extends Component {
                 body: JSON.stringify({ token: token })
             }).then(resp => resp.json())
                 .then(json => {
-                    console.log(json);
-                    console.log(json.id);
+                    console.log(json.friend);
 
                     this.setState({
                         friendMessage: [...json.friend],
                         idClient: json.id,
-                        isloadData: true
+                        isloadData: true,
+                        SelectedBoxId: json.friend[0].id
                     });
 
                 })
@@ -127,12 +128,21 @@ export default class Message extends Component {
             return (
                 <div className="message-container">
                     <div className="friend-massage-container">
-                        {this.state.friendMessage.map(e => {
-                            return <FriendMessageBox {...e} key={e._id} />
-                        }
-                        )}
+                        <div className='friend-massage-container__header'>
+                            
+                        </div>
+                        <div className='friend-massage-container__friend-list'>
+                            {this.state.friendMessage.map(e => {
+                                return <FriendMessageBox {...e} key={e._id} selected={this.state.SelectedBoxId === e.id} />
+                            }
+                            )}
+                        </div>
+
                     </div>
-                    <ChatSquare id={this.props.id} />
+                    <div className="chat-square-container">
+                        <ChatSquare id={this.props.id} />
+                    </div>
+
                 </div>
             )
         }

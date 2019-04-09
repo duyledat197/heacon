@@ -8,7 +8,7 @@ import axios from 'axios';
 import constant from '../../static/constant'
 
 export default class ChatSquare extends Component {
-    state={
+    state = {
 
     }
     getTokenfromlocalStorage() {
@@ -32,29 +32,36 @@ export default class ChatSquare extends Component {
     render() {
         // return false
         // console.log(this.state.chat_message);
-        
+
         return (
-            <div className="chat-friend-online-container">
-                <div className="chat-container">
-                    <div className="chat-container-name">Tên Cuộc Trò Chuyện</div>
-                    <div className="chat-container-content">
-                        {this.state.chat_message==null?null:this.state.chat_message.map(e => (
-                            <ChatBubble {...e} />
-                        ))}
+            <div className="chat-square">
+                <div className="chat-square__header">
+                    <div className='chat-square__header__title'>
+                        Your friend name
                     </div>
-                    <div className="chat-container-text-input">
-                        <div className="chat-container-text-input-left">
-                            <div className="chat-container-text-input-left-buff">
-                                <input className="chat-container-text-input-input" />
-                            </div>
-                            <div className="chat-container-text-input-left-buff-button">
-                                <button className="chat-container-text-input-button"> <img src="./static/icon_send.png" /> </button>
-                            </div>
+                    <CallButton className='chat-square__header__button'>
+                        <i className="fas fa-phone"></i>
+                    </CallButton>
+                    <VideoCallButton className='chat-square__header__button'>
+                        <i className="fas fa-video"></i>
+                    </VideoCallButton>
+                </div>
+                <div className='chat-square__body'>
+                    <div className='chat-square__body__chat-box'>
+                        <div className="chat-square__body__chat-box__bubble-list">
+                            {this.state.chat_message == null ? null : this.state.chat_message.map(e => (
+                                <ChatBubble {...e} />
+                            ))}
                         </div>
-                        <div className="chat-container-text-input-right">
-                            <CallButton />
-                            <VideoCallButton />
+                        <div className="chat-square__body__chat-box__chat-input-box">
+                            <input className='chat-square__body__chat-box__chat-input-box__input'
+
+                            />
+                            <div className='chat-square__body__chat-box__chat-input-box__button'></div>
                         </div>
+                    </div>
+                    <div className='chat-square__body__infomation'>
+                                
                     </div>
                 </div>
             </div>
