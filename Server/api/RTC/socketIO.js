@@ -155,7 +155,7 @@ module.exports = function(io){
                             infoMessage.save((err) => {
                                 socket.emit('ERROR', err);
                             })
-                           
+                            socket.emit('SERVER')
                             // listfriend.findOne({id : decoded.id},(err, friend) => {
                             //     if(err) socket.emit('ERROR', err);
                             //     else {
