@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import openSocket from 'socket.io-client';
 import './ChatSquare.scss'
 import ChatBubble from './ChatBubble';
 import CallButton from './CallButton';
@@ -16,7 +17,9 @@ export default class ChatSquare extends Component {
         var token = base64.decode(tokenEncoded);
         return token;
     }
-
+    connectSocket(){
+        return socket = openSocket(constant.server);
+    }
     async componentDidMount() {
         let param = this.props.id;
         const token = this.getTokenfromlocalStorage();
@@ -28,6 +31,8 @@ export default class ChatSquare extends Component {
         //     //     params
         //     // })
         // })
+        var socket = this.connectSocket();
+        
     }
     render() {
         // return false
@@ -57,7 +62,9 @@ export default class ChatSquare extends Component {
                             <input className='chat-square__body__chat-box__chat-input-box__input'
 
                             />
-                            <div className='chat-square__body__chat-box__chat-input-box__button'></div>
+                            <div className='chat-square__body__chat-box__chat-input-box__button'>
+                                <img src="./static/icon_send.png"></img>
+                            </div>
                         </div>
                     </div>
                     <div className='chat-square__body__infomation'>

@@ -70,12 +70,14 @@
         &__input {
           width: 100%;
           height: 1.5rem;
-          font-size: 0.8rem;
-          padding: 0.2rem;
+          font-size: 0.7rem;
+          color: rgb(146, 3, 27);
+          padding: 0.2rem 0.7rem;
           border: 1px solid lightgrey;
           border-radius: 0.75rem;
           margin-left: 0.5rem;
           margin-right: 0.2rem;
+          outline: none;
         }
         &__button {
           justify-self: flex-end;
@@ -86,9 +88,10 @@
           margin-left: 0.2rem;
           margin-right: 0.5rem;
           border-radius: 50%;
-          border: 1px solid gray;
-          & > i {
-            margin: auto;
+          // border: 1px solid gray;
+          & img{
+            width: 100%;
+            height: 100%;
           }
         }
       }
