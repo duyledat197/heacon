@@ -1,19 +1,30 @@
 import Link from 'next/link'
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import './FriendMessageBox.scss'
-export default class FriendMessageBox extends PureComponent {
+export default class FriendMessageBox extends Component {
   getDayOfWeek = (num) => {
     const getDayOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return getDayOfWeek[num]
   }
+  handleClick = (e) => {
+    e.preventDefault();
+    router.push(e.target.href)
+  }
+  handleRedirect = () => {
+    this.props.handleRedirect(this.props.id)
+  }
   render() {
-    const selected = this.props.selected?true:false;
+    const selected = this.props.selected ? true : false;
     var dateTimeOffset = new Date(this.props.lastTime);
-    console.log(dateTimeOffset);
-    console.log(dateTimeOffset.getDay().toString());
-    var link = <Link href={"/message/" + this.props.id}></Link>
+    var link = <Link href={'/message'}
+      as={this.props.id}
+      replace={true}
+      shallow={true}
+    ></Link>
     var friendMessageBoxElement =
-      <div className={"friend-message-box"+(selected?" selected":"")}>
+      <div className={"friend-message-box" + (selected ? " selected" : "")}
+        onClick={selected?null:() => this.handleRedirect()}
+      >
         <img
           className="friend-message-box__avatar"
           src="https://res.cloudinary.com/levanthanh-ptit/image/upload/v1531941390/sample.jpg"
@@ -28,12 +39,12 @@ export default class FriendMessageBox extends PureComponent {
           </span>
         </div>
       </div>
-    if(selected) 
-    return (
-      friendMessageBoxElement
-    )
-    else return(
-      React.cloneElement(link,null,friendMessageBoxElement)      
+    if (selected)
+      return (
+        friendMessageBoxElement
+      )
+    else return (
+      React.cloneElement(link, null, friendMessageBoxElement)
     )
   }
 }

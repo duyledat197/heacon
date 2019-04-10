@@ -27,7 +27,7 @@ class Header extends Component {
         return (
             <div className="header-row">
                 <div className="header-start">
-                    <div className="header-brand"> HeaCon</div>
+                    <div className="header-brand"> HeaCon<span>hub</span></div>
                     {/* <div className="header-col"> Hello</div> */}
                 </div>
                 {/* for not login user */}
@@ -44,7 +44,7 @@ class Header extends Component {
                         <div className={"header-setting-menu" + (this.state.header_info_menu ? "" : " disable")}>
                             <p className="setting-button">Information</p>
                             <p className="setting-button">Profile</p>
-                            <p className="setting-button">Logout</p>
+                            <p className="setting-button" onClick={() => this.props.handleLogout()}>Logout</p>
                         </div>
                     </div>
                 </div>}

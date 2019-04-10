@@ -50,16 +50,21 @@ class Body extends Component {
     render() {
         return (
             <div className="body-main">
-                <div>
-                    <div className="body-title"> Heart Connection </div>
+                <div className='body-main_title-box'>
+                    <div className="body-title"> Hearts Connection </div>
                     <div className="body-text"> {content[this.state.count]} </div>
+                </div>
+                <div className="chat-button-box">
+                    <div className='chat-button-box__bubble'>
+                        CHAT
+                    </div>
                 </div>
                 <button className="body-button" onClick={(e) => this.handleConnect()}><i class="fas fa-heart"></i> </button>
                 {/* <div className={this.state.isConnect ? "" : "display-none"}>
                     <Wait handleDisConnect={ this.handleDisConnect}/>
                 </div> */}
-                {this.state.isConnect ? <Wait handleDisConnect={this.handleDisConnect} 
-                changeLink={this.props.changeLink} /> : null}
+                {this.state.isConnect ? <Wait handleDisConnect={this.handleDisConnect}
+                    changeLink={this.props.changeLink} /> : null}
             </div>
 
         )

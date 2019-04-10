@@ -1,20 +1,16 @@
 //bubble chat message
 import React, { PureComponent } from 'react'
-
+import './ChatBubble.scss'
 export default class ChatBubble extends PureComponent {
   render() {
+      const idFriend = this.props.idFriend;
+      const id = this.props.id;
+      console.log('id'+id);
+      console.log('id friend'+idFriend);
     return (
-        <div className={this.props.id == myInfo.id ? "bubble-chat-right" : "bubble-chat-left"}>
-            <img
-                // src={findNamebyId(this.props.id).avatar.imgSmall} 
-                className={this.props.id == myInfo.id ? "display-none" : "friend-message-avatar"} />
-            <div className="bubble-wrap">
-                <div className={this.props.id == myInfo.id ? "display-none" : "bubble-chat-name"}>
-                    {/* {findNamebyId(this.props.id).name} */}
-                </div>
-                <div className={this.props.id == myInfo.id ? "bubble-chat-content-right" : "bubble-chat-content-left"}>
-                    {this.props.text}
-                </div>
+        <div className={"ChatBubble"+(idFriend===id?" left":" right")}>
+            <div className={"ChatBubble__box"+(idFriend===id?" left":" right")}>
+                {this.props.text}
             </div>
         </div>
     )
