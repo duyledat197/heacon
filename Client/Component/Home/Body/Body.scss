@@ -98,9 +98,12 @@
     height: 100px;
     color: white;
     transition: 0.5s;
+    cursor: pointer;
     &:after {
-      content: "";
+      content: '';
+      box-sizing: border-box;
       position: absolute;
+      outline: none;
       z-index: 1;
       bottom: 1%;
       left: 50%;

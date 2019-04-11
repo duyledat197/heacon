@@ -1,0 +1,40 @@
+.friendInforHeader{
+    display: flex;
+    width: 100%;
+    min-height: 55px;
+    border-bottom: 1px solid lightgrey;
+    padding: 12px;
+    &__avatar{
+        margin: auto 12px; 
+        border: 1px solid grey;
+        border-radius: 50%;
+        min-height: 50px;
+        min-width: 50px;
+    }
+    &__detail{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        padding: 0 12px;
+        &__name{
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: midnightblue;
+        }
+        &__status{
+            padding-left: 1rem;  
+            color: grey;
+        }
+    }
+    &__setting-button{
+        font-size: 1.2rem;
+        min-height: 50px;
+        min-width: 50px;
+        flex: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+}

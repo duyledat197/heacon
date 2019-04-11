@@ -9,6 +9,7 @@ var content = [
 class Body extends Component {
     constructor(props) {
         super(props);
+        this.handleRedirect = this.handleRedirect.bind(this);
     }
     componentWillMount() {
         this.setState({
@@ -47,6 +48,9 @@ class Body extends Component {
     handleDisConnect() {
         this.setState({ isConnect: false });
     }
+    handleRedirect(path){
+        location.replace('/'+path);
+    }
     render() {
         return (
             <div className="body-main">
@@ -54,7 +58,9 @@ class Body extends Component {
                     <div className="body-title"> Hearts Connection </div>
                     <div className="body-text"> {content[this.state.count]} </div>
                 </div>
-                <div className="chat-button-box">
+                <div className="chat-button-box"
+                onClick={() => this.handleRedirect('message')}
+                >
                     <div className='chat-button-box__bubble'>
                         CHAT
                     </div>
