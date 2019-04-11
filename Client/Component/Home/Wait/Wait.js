@@ -55,7 +55,7 @@ class Wait extends Component {
     render () {
         return (
             <div className="wait-container">
-                <div className="wait-connect"> Đang Kết Nối ...</div>
+                Đang Kết Nối ...
             </div>
         )
     }
