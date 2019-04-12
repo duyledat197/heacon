@@ -5,6 +5,8 @@ var friendModel = require('./../../models/friendModel');
 var fs = require('fs');
 var jwt = require('jsonwebtoken')
 var privateKey = fs.readFileSync('./private.key');
+var mapID = {};
+var mapsocketID = {};
 var Male = [];
 var Female = [];
 var uid = require('uid');
@@ -20,6 +22,9 @@ module.exports = function(io){
             Female = Female.filter((female) => {
                 return female.socketID != socket.id
             })
+            let id = mapsocketID[socket.id];
+            delete mapsocketID[socket.id];
+            delete mapID[id];
         })
 
         // socket.on('authenticate', (data) => {
@@ -123,6 +128,15 @@ module.exports = function(io){
                 }
             })
         })
+        socket.on('CLIENT_CONNECT_MESSAGE', (data) => {
+            jwt.verify(data.token, privateKey, (err, decoded) => {
+                if(err) socket.emit('ERROR', err);
+                else {
+                    mapID[decoded.id] = socket.id;
+                    mapsocketID[socket.id] = decoded.id;
+                } 
+            }) 
+        })
         socket.on('CLIENT_SEND_MESSAGE', (data) => {
             jwt.verify(data.token, privateKey, (err, decoded) => {
                 if(err) socket.emit('ERROR', err);
@@ -130,9 +144,9 @@ module.exports = function(io){
                     let idMessage = uid(10);
                     
                     let date = Date.now();
-                    messageModel.find({ id : data.message.id}, (err, listfriend) => {
+                    messageModel.findOne({ id : data.message.idFriend}, (err, listfriend) => {
                         if(err) socket.emit('ERROR', err);
-                        else {
+                        else {  
                             // let message = {
                             //     id : idMessage,
                             //     text : data.message.text,
@@ -140,17 +154,18 @@ module.exports = function(io){
                             // }
                         
                            
-                            listfriend.findOne({id : decoded},(err, friend) => {
+                            listfriend.friend.findOne({id : decoded.id},(err, friend) => {
                                 if(err) socket.emit('ERROR', err);
                                 else {
                                     let message = {
                                         id : idMessage,
                                         text : data.message.text,
-                                        date : data.message.date
+                                        date : date
                                     }
-                                    friend.push(message);
+                                    friend.message.push(message);
                                     listfriend.save((err) => {
                                         if(err) socket.emit('ERROR', err);
+
                                     });
                                 }
 
@@ -158,10 +173,10 @@ module.exports = function(io){
                         }
                     })
                      
-                    messageModel.find({ id : decoded}, (err, listfriend) =>{
+                    messageModel.find({ id : decoded.id}, (err, listfriend) =>{
                         if(err) socket.emit('ERROR', err);
                         else {
-                            listfriend.find({id : data.message.id}, (err, friend) => {
+                            listfriend.friend.find({id : data.message.id}, (err, friend) => {
                                 if(err) socket.emit('ERROR', err);
                                 else {
                                     let message = {
@@ -169,7 +184,7 @@ module.exports = function(io){
                                         text : data.message.text,
                                         date : data.message.date
                                     }
-                                    friend.push(message);
+                                    friend.message.push(message);
                                     listfriend.save((err) => {
                                         if(err) socket.emit('ERROR', err);
                                     });

@@ -22,6 +22,7 @@ class Camera extends Component {
         return (
             <div>
                 <video id="localStream" width="1000px" height="500px"></video>
+                <video></video>
             </div>
         )
     }
