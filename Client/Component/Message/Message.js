@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Message.scss';
-import { Route, BrowserRouter } from 'react-router-dom'
+import { withRouter } from 'next/router'
 import ChatSquare from './ChatSquare';
 import FriendMessageBox from './FriendMessageBox';
 var base64 = require('base-64');
@@ -51,15 +51,6 @@ var constant = require('./../../static/constant');
 //     }
 // ]
 
-// var chat_message = [
-//     { id : "12321312312", text : "mai đi nhậu không ?" },
-//     { id : "12321312313", text : "tao ốm rồi" },
-//     { id : "12321312312", text : "ốm cc" },
-//     { id : "12321312312", text : "suốt ngày bệnh" },
-//     { id : "12321312313", text : "cmm" },
-// ]
-
-
 // test function
 function findNamebyId(id) {
     var findName = friendMassage.find((e) => {
@@ -68,21 +59,30 @@ function findNamebyId(id) {
     console.log(findName);
     return findName.friend;
 }
-export default class Message extends Component {
+class Message extends Component {
     constructor(props) {
-        super(props);
-        this.state = {
-            friendMessage: [],
-            idClient: '',
-            isloadData: false,
-            SelectedBoxId: null,
-        }
+      super(props)
+        this.handleRedirect = this.handleRedirect.bind(this);
+      this.state = {
+        friendMessage: [],
+        idClient: '',
+        isloadData: false,
+        SelectedBoxId: null,
+      }
     }
+    
     getToken() {
         var tokenEncoded = localStorage.getItem('token');
         var token = base64.decode(tokenEncoded);
         return token;
     }
+    handleRedirect(id) {
+        this.setState({
+            SelectedBoxId: id
+        })
+        this.props.handleChangeRootId(id);
+    }
+
     async componentDidMount() {
         if (this.state.isloadData == false) {
             var token = await this.getToken();
@@ -107,40 +107,44 @@ export default class Message extends Component {
                 body: JSON.stringify({ token: token })
             }).then(resp => resp.json())
                 .then(json => {
-                    console.log(json.friend);
-
+                    if (this.props.id === undefined) location.replace("/message/" + json.friend[0].id)
                     this.setState({
                         friendMessage: [...json.friend],
                         idClient: json.id,
                         isloadData: true,
-                        SelectedBoxId: json.friend[0].id
+                        SelectedBoxId: this.props.id
                     });
-
                 })
         }
     }
     render() {
-        console.log(this.props.id);
+        this.refs
+        var FriendListElement = this.state.friendMessage.map(e => {
+            return <FriendMessageBox {...e}
+                key={e._id}
+                selected={this.state.SelectedBoxId === e.id}
+                handleRedirect={this.handleRedirect}
+            />
+        }
+        )
 
         if (this.state.isloadData === false) return false;
         else {
-            console.log(this.state.friendMessage);
             return (
                 <div className="message-container">
                     <div className="friend-massage-container">
                         <div className='friend-massage-container__header'>
-                            
+                            <div className='friend-massage-container__header__title'>
+                                Friend list
+                            </div>
                         </div>
                         <div className='friend-massage-container__friend-list'>
-                            {this.state.friendMessage.map(e => {
-                                return <FriendMessageBox {...e} key={e._id} selected={this.state.SelectedBoxId === e.id} />
-                            }
-                            )}
+                            {FriendListElement}
                         </div>
 
                     </div>
                     <div className="chat-square-container">
-                        <ChatSquare id={this.props.id} />
+                        <ChatSquare idFriend={this.props.id} router={this.props.router} />
                     </div>
 
                 </div>
@@ -148,3 +152,4 @@ export default class Message extends Component {
         }
     }
 }
+export default withRouter(Message)

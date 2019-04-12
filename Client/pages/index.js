@@ -60,11 +60,17 @@ class Home extends Component {
         })
         
     }
+    handleLogout = () =>{
+        localStorage.removeItem('token');
+        this.setState({
+            isLogin : false
+        })
+    }
     render () {
         return (
             <div className="main-cantainer">
                 {/* <BackGround/> */}
-                <Header {...this.state}/>
+                <Header {...this.state} handleLogout={this.handleLogout}/>
                 <Body {...this.state} changeLink={this.changeLink}/>
             </div>
         )
