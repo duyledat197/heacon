@@ -1,12 +1,14 @@
 .ChatBubble {
   display: flex;
   width: 100%;
+  max-width: 100%;
   justify-content: flex-start;
   padding: 0.8rem;
   &__box {
     display: flex;
     justify-content: center;
     align-items: center;
+    max-width: 70%;
     border-radius: 1.5rem;
     min-height: 3rem;
     padding: 0.5rem 1rem;
