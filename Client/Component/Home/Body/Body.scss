@@ -53,6 +53,7 @@
   transition: 0.5s;
   border-radius: 50%;
   outline: none;
+  cursor: pointer;
   &:hover {
     width: 200px;
     height: 200px;
@@ -86,6 +87,7 @@
   min-width: 100px;
   bottom: 0;
   right: 0;
+  cursor: pointer;
   &__bubble {
     display: flex;
     position: relative;

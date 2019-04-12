@@ -93,6 +93,7 @@ export default class ChatSquare extends Component {
 
     }
     componentWillUnmount() {
+        console.log('component will unmount');
 
     }
     // async componentDidMount() {

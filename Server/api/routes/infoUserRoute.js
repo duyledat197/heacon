@@ -21,4 +21,15 @@ router.post('/',(req,res) => {
         })
     }
 })
+router.post('/friend',(req,res) => {
+    infoUserModel.findOne({id : req.idFriend}, (err, info) => {
+        if(err) res.status(500).json(err);
+        else {
+           
+            
+            res.status(200).json(info);
+            // console.log(info);
+        }  
+    })
+})
 module.exports = router
