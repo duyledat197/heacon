@@ -56,6 +56,7 @@ export default class ChatSquare extends Component {
             return
         }
         const id = new Date().getMilliseconds();
+        /***call API and add to state***/
         var chat_message = this.state.chat_message;
         chat_message.push({ id: 1, text: text })
         await this.setState({
@@ -63,25 +64,14 @@ export default class ChatSquare extends Component {
             chatInputBoxText: ''
         })
         text_input.focus();
+        /***then scroll to bottom***/
         await this.scrollBottom('bubble-list-id')
     }
     scrollBottom(elementId) {
         var element = document.getElementById(elementId);
             element.scrollTop = element.scrollHeight - element.clientHeight;
+    }
 
-        // console.log('-----------------');
-        // console.log(element.scrollHeight);
-        // console.log(element.scrollTop);
-        // console.log(element.clientHeight);
-        // console.log('-----------------');
-    }
-    logScroll = (e) => {
-        // console.log('+++++++++++++++++++');
-        // console.log(e.target.scrollHeight);
-        // console.log(e.target.scrollTop);
-        // console.log(e.target.clientHeight);
-        // console.log('+++++++++++++++++++');
-    }
     handleKeyEnterPress(e) {
         if (e.key === 'Enter') {
             this.commitMessage();
@@ -89,13 +79,18 @@ export default class ChatSquare extends Component {
     }
 
     async componentDidMount() {
-
+        console.log('component did mount');
+        
         let idFriend = this.props.idFriend;
         const token = this.getTokenfromlocalStorage();
         await this.setState({
             idFriend: idFriend,
             chat_message: this.fakeCode(idFriend, token)
         })
+    }
+    componentDidUpdate(){
+        console.log('component update');
+
     }
     componentWillUnmount() {
 
@@ -142,7 +137,6 @@ export default class ChatSquare extends Component {
                         <div
                             id='bubble-list-id'
                             className="chat-square__body__chat-box__bubble-list"
-                            onScroll={e => this.logScroll(e)}
                         >
                             {this.state.chat_message == null ? null : this.state.chat_message.map(e => (
                                 <ChatBubble {...e} key={this.state.chat_message.indexOf(e)} idFriend={this.state.idFriend} />
