@@ -16,14 +16,13 @@ export default class FriendMessageBox extends Component {
   render() {
     const selected = this.props.selected ? true : false;
     var dateTimeOffset = new Date(this.props.lastTime);
-    var link = <Link href={'/message'}
+    var friendMessageBoxElement = <Link href={'/message'}
       as={this.props.id}
       replace={true}
       shallow={true}
-    ></Link>
-    var friendMessageBoxElement =
+    >
       <div className={"friend-message-box" + (selected ? " selected" : "")}
-        onClick={selected?null:() => this.handleRedirect()}
+        onClick={selected ? null : () => this.handleRedirect()}
       >
         <img
           className="friend-message-box__avatar"
@@ -39,12 +38,13 @@ export default class FriendMessageBox extends Component {
           </span>
         </div>
       </div>
+    </Link>      
     if (selected)
       return (
-        friendMessageBoxElement
+        friendMessageBoxElement.props.children
       )
     else return (
-      React.cloneElement(link, null, friendMessageBoxElement)
+      friendMessageBoxElement
     )
   }
 }

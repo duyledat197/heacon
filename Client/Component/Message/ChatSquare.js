@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 import openSocket from 'socket.io-client';
 var base64 = require('base-64');
 import axios from 'axios';
@@ -8,6 +9,7 @@ import ChatBubble from './ChatBubble';
 import CallButton from './CallButton';
 import VideoCallButton from './VideoCallButton';
 import FriendInfo from './FriendInfo';
+import { isNullOrUndefined } from 'util';
 
 export default class ChatSquare extends Component {
     constructor(props) {
@@ -17,12 +19,25 @@ export default class ChatSquare extends Component {
         this.commitMessage = this.commitMessage.bind(this);
         this.handleTextInputBoxOnChange = this.handleTextInputBoxOnChange.bind(this);
         this.handleKeyEnterPress = this.handleKeyEnterPress.bind(this);
-        this.state = {
-            idFriend: null,
-            token: null,
-            chat_message: null,
-            chatInputBoxText: '',
-        }
+        this.findLoadedChatIndex = this.findLoadedChatIndex.bind(this);
+        this._render_bubble = this._render_bubble.bind(this);
+        this.addNewLoadedChat = this.addNewLoadedChat.bind(this);
+    }
+    state = {
+        idFriend: this.props.idFriend,
+        componentDidMount: false,
+        LoadedChat: [
+            // {
+            //     idFriend,
+            //     chat_message:[
+            //         id,
+            //         text,
+            //     ]
+            // }
+        ],
+    }
+    static propTypes = {
+        idFriend: PropTypes.string,
     }
     fakeCode(id, token) {
         return [
@@ -41,12 +56,38 @@ export default class ChatSquare extends Component {
     connectSocket() {
         return socket = openSocket(constant.server);
     }
+    // call API method
     sendMessage() {
 
+    }
+    findLoadedChatIndex(idFriend) {
+        var loadedChat = this.state.LoadedChat;
+        var x = loadedChat.indexOf(loadedChat.find(e => { return e.idFriend === idFriend }));
+        return x
+    }
+    addNewLoadedChat(idFriend) {
+        this.setState({
+            idFriend: idFriend,
+            LoadedChat: [...this.state.LoadedChat, { idFriend: idFriend, chat_message: [] }]
+        })
     }
     handleTextInputBoxOnChange(e) {
         this.setState({
             chatInputBoxText: e.target.value
+        })
+    }
+    // require idFriend for unasync state change
+    pushMessage(mess, idFriend) {
+        var loaded = this.state.LoadedChat
+        let index = loaded.indexOf(loaded.find(e => {
+            return e.idFriend === idFriend
+        }))
+        loaded[index].chat_message.push({
+            id: this.props.myId,
+            text: mess,
+        })
+        this.setState({
+            LoadedChat: loaded,
         })
     }
     async commitMessage() {
@@ -55,23 +96,29 @@ export default class ChatSquare extends Component {
         if (text === '') {
             return
         }
+        var bubbleList = document.getElementById('bubble-list-id');
+        const bubbleListIsBottom = (bubbleList.scrollTop == (bubbleList.scrollHeight - bubbleList.clientHeight));
         const id = new Date().getMilliseconds();
         /***call API and add to state***/
-        var chat_message = this.state.chat_message;
-        chat_message.push({ id: 1, text: text })
-        await this.setState({
-            chat_message: chat_message,
-            chatInputBoxText: ''
-        })
+        await this.pushMessage(text, this.state.idFriend)
+        text_input.value = '';
         text_input.focus();
         /***then scroll to bottom***/
-        await this.scrollBottom('bubble-list-id')
+        if (bubbleListIsBottom)
+            await this.scrollBottom('bubble-list-id')
     }
     scrollBottom(elementId) {
         var element = document.getElementById(elementId);
-            element.scrollTop = element.scrollHeight - element.clientHeight;
+        element.scrollTop = element.scrollHeight - element.clientHeight;
     }
-
+    scrollTo(scroll_value) {
+        var element = document.getElementById('bubble-list-id');
+        element.scrollTop = scroll_value;
+    }
+    clearInput(elementId){
+        var element = document.getElementById(elementId);
+        element.value = ''
+    }
     handleKeyEnterPress(e) {
         if (e.key === 'Enter') {
             this.commitMessage();
@@ -79,47 +126,51 @@ export default class ChatSquare extends Component {
     }
 
     async componentDidMount() {
-        console.log('component did mount');
-        
+        console.log('com did mount');
+
         let idFriend = this.props.idFriend;
         const token = this.getTokenfromlocalStorage();
         await this.setState({
-            idFriend: idFriend,
-            chat_message: this.fakeCode(idFriend, token)
-        })
+            componentDidMount: true,
+            LoadedChat: [
+                {
+                    idFriend: idFriend,      
+                    chat_message: [],
+                }
+            ]
+        });
     }
-    componentDidUpdate(){
-        console.log('component update');
 
+    async componentDidUpdate(prevProps, prevState) {
+        console.log('com did update');
+        if (prevProps.idFriend !== this.props.idFriend) {
+            var new_idFriend = this.props.idFriend;
+            if (this.findLoadedChatIndex(new_idFriend) == -1) {
+                await this.addNewLoadedChat(this.props.idFriend)
+            } else {
+                await this.setState({
+                    idFriend: this.props.idFriend,
+                })
+                await this.scrollBottom('bubble-list-id')
+            }
+            await this.clearInput('chat-input-box-id')
+
+        }
     }
     componentWillUnmount() {
-        console.log('component will unmount');
-
+        console.log('com unmount');
     }
-    // async componentDidMount() {
-    //     let idFriend = this.props.idFriend;
-    //     const token = this.getTokenfromlocalStorage();
-    //     // this.setState({
-    //     //     chat_message: this.fakeCode(idFriend, token)
-    //     // })
-    //     // await axios.post(constant.server+ "/message", { token: token, idfriend: idFriend }).then(resp => {
-    //     //     chat_message = resp.data;
-    //     //     console.log(chat_message);
-    //     //     // this.setState({
-    //     //     //     chat_message: chat_message,
-    //     //     //     idfriend: idFriend,
-    //     //     // })
-    //     // })
-    //     var socket = await this.connectSocket();
-    //     // await axios.post( constant.server + '/info', {
-    //     //     token : token
-    //     // }).then(resp => {
-    //     //     console.log(resp.data);
-    //     //     info = resp.data;
-
-    //     // })
-    // }
+    _render_bubble(idFriend) {
+        var x = this.state.LoadedChat[this.findLoadedChatIndex(idFriend)].chat_message.map( e =>{
+          return  <ChatBubble {...e}  idFriend={idFriend} />
+        })
+        return x;
+    }
     render() {
+         var chat_bubble_list = null
+         if(this.state.componentDidMount){
+             chat_bubble_list = this._render_bubble(this.state.idFriend);
+         } 
         return (
             <div className="chat-square">
                 <div className="chat-square__header">
@@ -139,9 +190,7 @@ export default class ChatSquare extends Component {
                             id='bubble-list-id'
                             className="chat-square__body__chat-box__bubble-list"
                         >
-                            {this.state.chat_message == null ? null : this.state.chat_message.map(e => (
-                                <ChatBubble {...e} key={this.state.chat_message.indexOf(e)} idFriend={this.state.idFriend} />
-                            ))}
+                            {chat_bubble_list}
                         </div>
                         <div className="chat-square__body__chat-box__chat-input-box">
 
@@ -149,8 +198,7 @@ export default class ChatSquare extends Component {
                                 className='chat-square__body__chat-box__chat-input-box__input'
                                 type='text'
                                 placeholder='Aa'
-                                value={this.state.chatInputBoxText}
-                                onChange={e => this.handleTextInputBoxOnChange(e)}
+                                autoComplete='off'
                                 onKeyPress={(e) => this.handleKeyEnterPress(e)}
                             />
                             <div className='chat-square__body__chat-box__chat-input-box__button'
@@ -161,7 +209,7 @@ export default class ChatSquare extends Component {
                         </div>
                     </div>
                     <div className='chat-square__body__infomation'>
-                        <FriendInfo/>
+                        <FriendInfo />
                     </div>
                 </div>
             </div>
