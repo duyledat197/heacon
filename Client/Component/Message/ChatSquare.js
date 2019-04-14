@@ -39,13 +39,13 @@ export default class ChatSquare extends Component {
     static propTypes = {
         idFriend: PropTypes.string,
     }
-    fakeCode(id, token) {
+    fakeCode(idFriend, myId) {
         return [
-            { id: id, text: "mai đi nhậu không ?" },
-            { id: 1, text: "tao ốm rồi" },
-            { id: id, text: "ốm cc" },
-            { id: id, text: "suốt ngày bệnh" },
-            { id: 1, text: "cmm" },
+            { id: idFriend, text: "mai đi nhậu không ?" },
+            { id: myId, text: "tao ốm rồi" },
+            { id: idFriend, text: "ốm cc" },
+            { id: idFriend, text: "suốt ngày bệnh" },
+            { id: idFriend, text: "cmmmmmm mmmmm mmmmmmm a mmmmmmm mmmmmmmmmmm mmmmmm a mmmmmmm mmmmmmmmmmmmmm a mmmmmmm mmmmmmmmmmmmmm a mmmmmmm mmmmmmmmmmmmmm a mmmmmmm mmmmmmmmmmmmm mmmmmmmmmmm" },
         ]
     }
     getTokenfromlocalStorage() {
@@ -115,7 +115,7 @@ export default class ChatSquare extends Component {
         var element = document.getElementById('bubble-list-id');
         element.scrollTop = scroll_value;
     }
-    clearInput(elementId){
+    clearInput(elementId) {
         var element = document.getElementById(elementId);
         element.value = ''
     }
@@ -134,8 +134,8 @@ export default class ChatSquare extends Component {
             componentDidMount: true,
             LoadedChat: [
                 {
-                    idFriend: idFriend,      
-                    chat_message: [],
+                    idFriend: idFriend,
+                    chat_message: this.fakeCode(idFriend, this.props.myId),
                 }
             ]
         });
@@ -161,16 +161,16 @@ export default class ChatSquare extends Component {
         console.log('com unmount');
     }
     _render_bubble(idFriend) {
-        var x = this.state.LoadedChat[this.findLoadedChatIndex(idFriend)].chat_message.map( e =>{
-          return  <ChatBubble {...e}  idFriend={idFriend} />
+        var x = this.state.LoadedChat[this.findLoadedChatIndex(idFriend)].chat_message.map(e => {
+            return <ChatBubble {...e} idFriend={idFriend} />
         })
         return x;
     }
     render() {
-         var chat_bubble_list = null
-         if(this.state.componentDidMount){
-             chat_bubble_list = this._render_bubble(this.state.idFriend);
-         } 
+        var chat_bubble_list = null
+        if (this.state.componentDidMount) {
+            chat_bubble_list = this._render_bubble(this.state.idFriend);
+        }
         return (
             <div className="chat-square">
                 <div className="chat-square__header">

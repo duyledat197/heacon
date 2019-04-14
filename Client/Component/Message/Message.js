@@ -14,7 +14,8 @@ class Message extends Component {
             friendMessage: [],
             myId: '',
             isloadData: false,
-            SelectedBoxId: null,
+            selectedBoxId: null,
+            friendAvatarUrl: '',
         }
     }
 
@@ -25,7 +26,7 @@ class Message extends Component {
     }
     handleRedirect(id) {
         this.setState({
-            SelectedBoxId: id
+            selectedBoxId: id
         })
         this.props.handleChangeRootId(id);
     }
@@ -44,11 +45,12 @@ class Message extends Component {
             }).then(resp => resp.json())
                 .then(json => {
                     if (this.props.idFriend === undefined) location.replace("/message/" + json.friend[0].id)
+                    console.log(json.friend);
                     this.setState({
                         friendMessage: [...json.friend],
                         myId: json.id,
                         isloadData: true,
-                        SelectedBoxId: this.props.idFriend
+                        selectedBoxId: this.props.idFriend
                     });
                 })
         }
@@ -58,7 +60,7 @@ class Message extends Component {
         var FriendListElement = this.state.friendMessage.map(e => {
             return <FriendMessageBox {...e}
                 key={e._id}
-                selected={this.state.SelectedBoxId === e.id}
+                selected={this.state.selectedBoxId === e.id}
                 handleRedirect={this.handleRedirect}
             />
         }

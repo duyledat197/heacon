@@ -4,18 +4,18 @@ export default class FriendInfo extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className='friendInforHeader'>
-          <div className='friendInforHeader__avatar'></div>
-          <div className='friendInforHeader__detail'>
-            <div className='friendInforHeader__detail__name'>Your name</div>
-            <div className='friendInforHeader__detail__status'>fuking die</div>
+        <div className='friendInfoHeader'>
+          <div className='friendInfoHeader__avatar'></div>
+          <div className='friendInfoHeader__detail'>
+            <div className='friendInfoHeader__detail__name'>Your name</div>
+            <div className='friendInfoHeader__detail__status'>fuking die</div>
           </div>
-          <div className='friendInforHeader__setting-button'>
+          <div className='friendInfoHeader__setting-button'>
             <i className="fas fa-cog"></i>
           </div>
         </div>
         <div >
-
+          
         </div>
       </React.Fragment>
     )
