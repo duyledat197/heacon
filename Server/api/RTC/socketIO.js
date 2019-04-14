@@ -165,28 +165,21 @@ module.exports = function(io){
                                     friend.message.push(message);
                                     listfriend.save((err) => {
                                         if(err) socket.emit('ERROR', err);
+                                        else {
+                                            var message = {
+                                                id : decoded.id,
+                                                message : {
+                                                    id : data.message.idFriend,
+                                                    text : data.message.text
+                                                }
+                                            }
+                                            io.to(mapID[data.message.id]).emit('SEND_MESSAGE_TO_CLIENT',message);
+                                        }
 
                                     });
                                 }
 
                             })
-                            socket.emit('SERVER')
-                            // listfriend.findOne({id : decoded.id},(err, friend) => {
-                            //     if(err) socket.emit('ERROR', err);
-                            //     else {
-                            //         let message = {
-                            //             id : idMessage,
-                            //             text : data.message.text,
-                            //             date : data.message.date
-                            //         }
-                            //         friend.push(message);
-                            //         listfriend.save((err) => {
-                            //             if(err) socket.emit('ERROR', err);
-                            //         });
-                            //     }
-
-                            // })
-
                         }
                     })
                      
@@ -204,6 +197,7 @@ module.exports = function(io){
                                     friend.message.push(message);
                                     listfriend.save((err) => {
                                         if(err) socket.emit('ERROR', err);
+                                        else socket.emit('SEND_DATA_SUCCESS', { success : true});
                                     });
                                 }
                             })
