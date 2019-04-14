@@ -1,3 +1,4 @@
+@import '../colors.scss';
 .display-none {
   display: none;
 }
@@ -9,11 +10,15 @@
   box-sizing: border-box;
 }
 .friend-massage-container {
+  display: flex;
+  flex-direction: column;
   min-width: 200px;
   flex: 0 0 25%;
   flex-direction: column;
   border-right: 1px solid lightcoral;
-  background: linear-gradient(to right, rgb(255, 241, 244), rgb(255, 209, 217));
+  // background: linear-gradient(to right, rgb(255, 241, 244), rgb(255, 209, 217));
+  // background: linear-gradient(to right, #ed4264, #ffedbc);
+  background: linear-gradient(to right, #dd5e89, #f7bb97);
   &__header {
     display: flex;
     box-sizing: border-box;
@@ -59,6 +64,19 @@
     flex-direction: column;
     width: 100%;
     padding: 0.5rem;
+    height: 100%;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      width: 10px;
+      background-color: $scrollbar-back;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: $scrollbar-thumb;
+      border-radius: 5px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: $scrollbar-thumb-hover;
+    }
   }
 }
 .chat-square-container {

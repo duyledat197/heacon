@@ -13,12 +13,13 @@
     justify-content: center;
     align-items: center;
     border-bottom: 1px solid lightgrey;
+    background: linear-gradient(to right, #e55d87, #5fc3e4);
     &__title {
       display: flex;
       justify-content: center;
       align-items: center;
       box-sizing: border-box;
-      color: red;
+      color: white;
       font-size: 1rem;
       font-weight: 400;
       width: 100%;
@@ -32,13 +33,14 @@
       min-width: 2rem;
       border-radius: 50%;
       margin: 0 0.2rem;
-      border: 1px solid gray;
+      border: 1px solid white;
       display: flex;
       justify-content: center;
       align-items: center;
+      cursor: pointer;
       & > i {
         margin: auto;
-        color: deepskyblue;
+        color: white;
       }
     }
   }
@@ -57,12 +59,13 @@
         box-sizing: border-box;
         padding: 0 0.7em;
         border-bottom: 1px solid lightgrey;
-        overflow-y: scroll;
+        overflow-y: auto;
         &::-webkit-scrollbar {
           width: 10px;
           background-color: $scrollbar-back;
         }
         &::-webkit-scrollbar-thumb {
+          border-radius: 5px;
           background-color: $scrollbar-thumb;
         }
         &::-webkit-scrollbar-thumb:hover {
@@ -70,6 +73,7 @@
         }
       }
       &__chat-input-box {
+        background: linear-gradient(to right, #ff6e7f, #87bdda);
         flex: 0;
         justify-self: flex-end;
         display: flex;
@@ -86,7 +90,8 @@
           font-size: 1rem;
           color: rgb(146, 3, 27);
           padding: 0.2rem 0.7rem;
-          border: 1px solid grey;
+          // border: 1px solid grey;
+          border: none;
           border-radius: 0.75rem;
           margin-left: 0.5rem;
           margin-right: 0.2rem;
@@ -114,6 +119,7 @@
       height: 100%;
       width: 35%;
       min-width: 200px;
+      background: linear-gradient(to right, #ede574, #e1f5c4)
     }
   }
 }

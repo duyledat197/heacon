@@ -2,7 +2,7 @@
     display: flex;
     width: 100%;
     min-height: 55px;
-    border-bottom: 1px solid lightgrey;
+    border-bottom: 1px solid white;
     padding: 12px;
     &__avatar{
         margin: auto 12px; 
@@ -10,6 +10,7 @@
         border-radius: 50%;
         min-height: 50px;
         min-width: 50px;
+        background-color: white;
     }
     &__detail{
         flex: 1;
@@ -37,4 +38,7 @@
         align-items: center;
     }
 
+}
+.friendInforOption{
+    
 }

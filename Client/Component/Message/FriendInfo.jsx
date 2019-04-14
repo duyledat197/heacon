@@ -14,6 +14,9 @@ export default class FriendInfo extends Component {
             <i className="fas fa-cog"></i>
           </div>
         </div>
+        <div >
+
+        </div>
       </React.Fragment>
     )
   }
