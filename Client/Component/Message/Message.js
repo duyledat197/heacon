@@ -35,7 +35,7 @@ class Message extends Component {
         if (this.state.isloadData == false) {
             var token = await this.getToken();
 
-            const fetchFriend = await fetch(constant.server + '/message/friend', {
+            const fetchFriend = await fetch(constant.server + '/message/friends', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -45,7 +45,7 @@ class Message extends Component {
             }).then(resp => resp.json())
                 .then(json => {
                     if (this.props.idFriend === undefined) location.replace("/message/" + json.friend[0].id)
-                    console.log(json.friend);
+                    console.log(json);
                     this.setState({
                         friendMessage: [...json.friend],
                         myId: json.id,
