@@ -7,6 +7,7 @@ var bcrypt = require('bcrypt');
 var fs = require('fs');
 var infoModel = require('./../../models/infoUserModel');
 var friendModel = require('./../../models/friendModel');
+var messageModel = require('./../../models/messageModel')
 // var privateKey = fs.readFileSync('./private.key');
 router.post('/', (req, res) => {
     console.log(JSON.stringify(req.body));
@@ -48,9 +49,16 @@ router.post('/', (req, res) => {
                                         friend.id = userTempt.id
                                         friend.save((err) => {
                                             if(err) res.status(500).json(err);
-                                            else res.status(200).json({success : true});
+                                            else {
+                                                var messagemodel = new messageModel();
+                                                messagemodel.id = userTempt.id;
+                                                messagemodel.save(err => {
+                                                    if(err) res.status(500).json(err);
+                                                    else res.status(200).json({success : true});
+                                                })
+                                            }
                                         })
-                                        
+                                       
                                     }
                                 });
                             }

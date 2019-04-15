@@ -11,15 +11,16 @@ $avatar-size: $friend-message-box-min-height * 0.8;
   border: 1px solid white;
   border-radius: 1rem;
   padding: 0.6rem;
+  transition: 0.5s background-color;
   &:last-child {
     margin-bottom: 0;
   }
   &:hover {
-    background: rgba(245, 206, 215, 0.212);
+    background: rgba(245, 206, 215, 0.812);
   }
   &.selected {
-    background: rgba(243, 179, 194, 0.801);
-    border: 3px dashed lightcoral;
+    background: rgba(245, 206, 215, 0.312);
+    border: 3px dashed white;
   }
   &__avatar {
     display: block;
@@ -52,14 +53,15 @@ $avatar-size: $friend-message-box-min-height * 0.8;
       flex: 3;
       font-style: italic;
       font-size: 0.8rem;
-      color: gray;
+      color: rgb(92, 92, 92);
+      overflow: hidden;
     }
     &__lastTime {
       flex: 1;
       align-self: flex-end;
       font-size: 10px;
       justify-self: flex-end;
-      color: gray;
+      color: rgb(92, 92, 92);
     }
     & abbr {
       text-decoration: none;

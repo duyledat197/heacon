@@ -12,7 +12,6 @@ router.post('/', (req, res) => {
         bcrypt.compare(req.body.password, user.password , (err, resq) =>{
             if(!err) {
                 console.log(resq);
-                
                 if(resq) {
                 //    var tokenn =  jwt.sign({exp: Math.floor(Date.now() / 1000) + (60 * 60), data : user.id }, "privateKey")
                 jwt.sign({

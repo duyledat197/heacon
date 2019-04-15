@@ -22,7 +22,7 @@ class MessagePage extends Component {
     }
     render() {
         return (
-            <Message handleChangeRootId={this.handleChangeRootId} id={this.state.id} />
+            <Message handleChangeRootId={this.handleChangeRootId} idFriend={this.state.id} />
         )
     }
 }

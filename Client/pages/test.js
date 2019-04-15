@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import Message from '../Component/Message/Message'
-import Camera from './../Component/Camera/camera'
+
+import LoginTest from './../Component/LoginTest/LoginTest';
 class Test extends Component {
     render () {
         return (
-                <Message/>
+                <LoginTest/>
         )
     }
 }
