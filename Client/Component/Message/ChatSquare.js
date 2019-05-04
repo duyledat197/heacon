@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import openSocket from 'socket.io-client';
 var base64 = require('base-64');
-import axios from 'axios';
 import constant from '../../static/constant'
 import './ChatSquare.scss'
 import ChatBubble from './ChatBubble';
 import CallButton from './CallButton';
 import VideoCallButton from './VideoCallButton';
 import FriendInfo from './FriendInfo';
-import { isNullOrUndefined } from 'util';
+
+var socket;
 
 export default class ChatSquare extends Component {
     constructor(props) {
@@ -22,6 +22,7 @@ export default class ChatSquare extends Component {
         this.findLoadedChatIndex = this.findLoadedChatIndex.bind(this);
         this._render_bubble = this._render_bubble.bind(this);
         this.addNewLoadedChat = this.addNewLoadedChat.bind(this);
+        this.emitMessageToSocket - this.emitMessageToSocket.bind(this);
     }
     state = {
         idFriend: this.props.idFriend,
@@ -48,6 +49,9 @@ export default class ChatSquare extends Component {
             { id: idFriend, text: "cmmmmmm mmmmm mmmmmmm a mmmmmmm mmmmmmmmmmm mmmmmm a mmmmmmm mmmmmmmmmmmmmm a mmmmmmm mmmmmmmmmmmmmm a mmmmmmm mmmmmmmmmmmmmm a mmmmmmm mmmmmmmmmmmmm mmmmmmmmmmm" },
         ]
     }
+    fetchMessage(id) {
+
+    }
     getTokenfromlocalStorage() {
         var tokenEncoded = localStorage.getItem('token');
         var token = base64.decode(tokenEncoded);
@@ -62,8 +66,8 @@ export default class ChatSquare extends Component {
     }
     findLoadedChatIndex(idFriend) {
         var loadedChat = this.state.LoadedChat;
-        var x = loadedChat.indexOf(loadedChat.find(e => { return e.idFriend === idFriend }));
-        return x
+        var elements = loadedChat.indexOf(loadedChat.find(e => { return e.idFriend === idFriend }));
+        return elements
     }
     addNewLoadedChat(idFriend) {
         this.setState({
@@ -75,6 +79,20 @@ export default class ChatSquare extends Component {
         this.setState({
             chatInputBoxText: e.target.value
         })
+    }
+    emitMessageToSocket(idFriend, text) {
+        try {
+            socket.emit('CLIENT_SEND_MESSAGE', {
+                token: this.getTokenfromlocalStorage(),
+                message: {
+                    idFriend,
+                    text,
+                }
+            })
+        } catch (error) {
+            alert(error)
+        }
+
     }
     // require idFriend for unasync state change
     pushMessage(mess, idFriend) {
@@ -90,6 +108,15 @@ export default class ChatSquare extends Component {
             LoadedChat: loaded,
         })
     }
+    async onReceiveMessage(idFriend, text) {
+        var bubbleList = document.getElementById('bubble-list-id');
+        const bubbleListIsBottom = (bubbleList.scrollTop == (bubbleList.scrollHeight - bubbleList.clientHeight));
+        /*** add to state ***/
+        await this.pushMessage(text, idFriend)
+        /***then scroll to bottom***/
+        if (bubbleListIsBottom)
+            await this.scrollBottom('bubble-list-id')
+    }
     async commitMessage() {
         var text_input = document.getElementById('chat-input-box-id');
         var text = text_input.value
@@ -98,8 +125,9 @@ export default class ChatSquare extends Component {
         }
         var bubbleList = document.getElementById('bubble-list-id');
         const bubbleListIsBottom = (bubbleList.scrollTop == (bubbleList.scrollHeight - bubbleList.clientHeight));
-        const id = new Date().getMilliseconds();
-        /***call API and add to state***/
+        /*** call API to emit message ***/
+        await this.emitMessageToSocket(this.state.idFriend, text)
+        /*** add to state ***/
         await this.pushMessage(text, this.state.idFriend)
         text_input.value = '';
         text_input.focus();
@@ -126,8 +154,6 @@ export default class ChatSquare extends Component {
     }
 
     async componentDidMount() {
-        console.log('com did mount');
-
         let idFriend = this.props.idFriend;
         const token = this.getTokenfromlocalStorage();
         await this.setState({
@@ -139,6 +165,10 @@ export default class ChatSquare extends Component {
                 }
             ]
         });
+        // connect soket
+        socket = openSocket(constant.server);
+        socket.emit('CLIENT_CONNECT_MESSAGE', { token });
+        socket.on('SEND_MESSAGE_TO_CLIENT', data => this.onReceiveMessage(data))
     }
 
     async componentDidUpdate(prevProps, prevState) {
@@ -161,10 +191,15 @@ export default class ChatSquare extends Component {
         console.log('com unmount');
     }
     _render_bubble(idFriend) {
-        var x = this.state.LoadedChat[this.findLoadedChatIndex(idFriend)].chat_message.map(e => {
-            return <ChatBubble {...e} idFriend={idFriend} />
+        var loadedChat = this.state.LoadedChat;
+        var elements = loadedChat[this.findLoadedChatIndex(idFriend)].chat_message.map(e => {
+            return <ChatBubble
+                {...e}
+                idFriend={idFriend}
+                key={loadedChat[this.findLoadedChatIndex(idFriend)].chat_message.indexOf(e)}
+            />
         })
-        return x;
+        return elements;
     }
     render() {
         var chat_bubble_list = null
