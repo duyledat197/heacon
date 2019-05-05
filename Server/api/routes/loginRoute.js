@@ -29,7 +29,7 @@ router.post('/', (req, res) => {
                     //   console.log(token);
                       
                 }
-                else res.status(200).json({success : false, text : "Sai Tài Khoản hoặc Mật Khẩu"});
+                else res.status(500).json({success : false, text : "Sai Tài Khoản hoặc Mật Khẩu"});
             }
             else res.status(500).json(err);
 
