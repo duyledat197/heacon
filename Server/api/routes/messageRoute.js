@@ -7,32 +7,28 @@ var privateKey = fs.readFileSync('./private.key');
 var authenticate = require('./authenticateRoute');
 var friendModel = require('./../../models/friendModel');
 router.use(authenticate);
-router.post('/friends', (req, res) => {
-    friendModel.findOne({id : req.id}).then(data => {
-        console.log(data);
-        res.status(200).json(data);
-    }).catch(err => {
-        res.status(500).json(err);
+router.post('/load', (req, res) => {
+    messageModel.findOne({id : req.id}, (err, listFriend) => {
+        if(!err){
+            let indexFriend = listfriend.friend.findIndex((friend) => {
+                return friend.id === idFriend
+            })
+            let length_array = listFriend.friend[indexFriend].message.length;
+            var array_message;
+            if(length_array < 10){
+                array_message = listFriend.friend[indexFriend].message.slice(0, length_array - 1);
+            }
+            else {
+                array_message = listFriend.friend[indexFriend].message.slice(length_array - 10, length_array - 1);
+            }
+            res.status(200).json(array_message);
+        }
+        else res.status(500).json(err);
     })
 })
 
 router.post('/p', (req, res) => {
    
-    if(req.err) res.status(500).json(err);
-    else {
-        messageModel.find({ id : req.body.id}).then( messageInfo => {
-            messageInfo.friend.find({id : req.idfriend}).then(friend => {
-                // var message = friend.message;
-                friend.message.find({}).last(10).then(message => {
-                    res.status(200).json(message);
-                }).catch(err => {
-                    res.status(500).json(err);
-                })  
-            }).catch(err => {
-                res.status(500).json(err);
-            })
-        })
-    }
       
 })
 
