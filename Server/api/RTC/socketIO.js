@@ -130,7 +130,7 @@ module.exports = function (io) {
                             var friendName = Male[0].name;
                             socket.emit('FIND_OUT', Male[0].id);
                             io.to(Male[0].socketID).emit('FIND_OUT', info.id);
-                            console.log(info.id);
+                            // console.log(info.id);
 
                             // console.log(Male[0].id);
 
@@ -148,25 +148,27 @@ module.exports = function (io) {
         })
         socket.on('CLIENT_CONNECT_MESSAGE', (data) => {
             console.log('CLIENT_CONNECT_MESSAGE:::');
-            console.log(data);
+            // console.log(data);
 
             jwt.verify(data.token, privateKey, (err, decoded) => {
                 if (err) socket.emit('ERROR', err);
                 else {
                     mapID[decoded.id] = socket.id;
                     mapsocketID[socket.id] = decoded.id;
+                    console.log(mapID);
+                    
                 }
             })
         })
         socket.on('CLIENT_SEND_MESSAGE', (data) => {
             console.log('CLIENT_SEND_MESSAGE:::');
-            console.log(data);
+            // console.log(data);
 
             jwt.verify(data.token, privateKey, (err, decoded) => {
                 if (err) socket.emit('ERROR', err);
                 else {
                     let date = Date.now();
-                    message = {
+                    let message = {
                         id: decoded.id,
                         text: data.message.text,
                         date: date
@@ -174,7 +176,9 @@ module.exports = function (io) {
                     recordMessage(decoded.id, data.message.idFriend, decoded.id, data.message.text, date);
                     recordMessage(data.message.idFriend, decoded.id, decoded.id, data.message.text, date);
                     socket.emit('SEND_MESSAGE_TO_CLIENT', message);
-                    if(mapID[data.message.id] !== -1)io.to(mapID[data.message.id]).emit('SEND_MESSAGE_TO_CLIENT', message);
+                    console.log(mapID);
+                    if(mapID[data.message.idFriend] !== -1)
+                        io.to(mapID[data.message.idFriend]).emit('SEND_MESSAGE_TO_CLIENT', message);
 
                 }
             })

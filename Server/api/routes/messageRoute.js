@@ -7,16 +7,36 @@ var privateKey = fs.readFileSync('./private.key');
 var authenticate = require('./authenticateRoute');
 var friendModel = require('./../../models/friendModel');
 router.use(authenticate);
+router.post('/friends', (req, res) => {
+    friendModel.findOne({ id: req.id }).then(data => {
+        res.status(200).json(data);
+    }).catch(err => {
+        res.status(500).json(err);
+
+    })
+})
 router.post('/load', (req, res) => {
-    messageModel.findOne({id : req.id}, (err, listFriend) => {
-        if(!err){
-            let indexFriend = listfriend.friend.findIndex((friend) => {
-                return friend.id === idFriend
+    console.log("LOAD_MESSAGE__::::");
+    
+    // console.log(req.id);
+    
+    messageModel.findOne({ id: req.id }, (err, listFriend) => {
+        // console.log(listFriend);
+        
+        if (!err) {
+            let indexFriend = listFriend.friend.findIndex((friend) => {
+                return friend.id === req.body.idFriend
             })
+            // console.log(indexFriend);
+            // console.log(req.body.idFriend);
+            
+            // console.log("listFriend.friend[indexFriend]");
+            // console.log(listFriend.friend[indexFriend]);
+            
             let length_array = listFriend.friend[indexFriend].message.length;
             var array_message;
-            if(length_array < 10){
-                array_message = listFriend.friend[indexFriend].message.slice(0, length_array - 1);
+            if (length_array < 10) {
+                array_message = listFriend.friend[indexFriend].message;
             }
             else {
                 array_message = listFriend.friend[indexFriend].message.slice(length_array - 10, length_array - 1);
@@ -28,8 +48,8 @@ router.post('/load', (req, res) => {
 })
 
 router.post('/p', (req, res) => {
-   
-      
+
+
 })
 
 module.exports = router;
