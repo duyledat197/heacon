@@ -24,10 +24,15 @@ export default class FriendMessageBox extends Component {
     var friendMessageBoxElement = <div className={"friend-message-box" + (selected ? " selected" : "")}
       onClick={selected ? null : () => this.handleRedirect()}
     >
-      <img
-        className="friend-message-box__avatar"
-        src="https://res.cloudinary.com/levanthanh-ptit/image/upload/v1531941390/sample.jpg"
-      />
+      <div className="friend-message-box__avatar">
+        {
+          this.props.avatar?(
+            null
+          ):(
+            <i className='fas fa-user-circle'/>
+          )
+        }
+      </div>
       <div className="friend-message-box__info">
         <span className="friend-message-box__info__name"> {this.props.name}</span>
         <span className="friend-message-box__info__lastMessage"> {this.props.lastMessage}</span>

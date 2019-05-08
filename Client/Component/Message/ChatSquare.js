@@ -233,7 +233,7 @@ export default class ChatSquare extends Component {
             <div className="chat-square">
                 <div className="chat-square__header">
                     <div className='chat-square__header__title'>
-                        Your friend name
+                        {this.props.friendName}
                     </div>
                     <CallButton className='chat-square__header__button'>
                         <i className="fas fa-phone"></i>

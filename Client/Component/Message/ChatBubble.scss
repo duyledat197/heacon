@@ -16,9 +16,15 @@
     min-width: 3rem;
     max-height: 3rem;
     max-width: 3rem;
-    border: 1px solid gray;
     border-radius: 1.5rem;
     margin-right: 0.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    i{
+      font-size: 3rem;
+      color: gray;
+    }
   }
   &__box {
     display: flex;

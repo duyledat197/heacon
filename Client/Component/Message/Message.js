@@ -30,7 +30,6 @@ class Message extends Component {
             selectedBoxId: id
         })
         this.props.handleChangeRootId(id);
-        alert(Router.asPath);
         Router.push(`${Router.route}/${id}`, `${Router.route}/${id}`, { shallow: true });
     }
     getFriendNameById(id) {

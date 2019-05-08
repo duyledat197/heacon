@@ -9,7 +9,7 @@ export default class FriendInfo extends Component {
             {this.props.FriendAvatar?(
               null
             ):(
-              null
+              <i className='fas fa-user-circle'/>
             )}
           </div>
           <div className='friendInfoHeader__detail'>

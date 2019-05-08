@@ -6,7 +6,9 @@ export default class ChatBubble extends PureComponent {
     let fromOther = this.props.id === this.props.idFriend;
     return (
       <div className={"ChatBubble" + (fromOther ? " left" : " right")}>
-        {fromOther && <div className='ChatBubble__avatar'></div>}
+        {fromOther && <div className='ChatBubble__avatar'>
+          <i className='fas fa-user-circle' />
+        </div>}
         <div className={"ChatBubble__box" + (fromOther ? " left" : " right")}>
           {this.props.text}
         </div>
