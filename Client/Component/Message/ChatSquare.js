@@ -8,13 +8,13 @@ import ChatBubble from './ChatBubble';
 import CallButton from './CallButton';
 import VideoCallButton from './VideoCallButton';
 import FriendInfo from './FriendInfo';
-
+import axios from 'axios';
 var socket;
 
 export default class ChatSquare extends Component {
     constructor(props) {
         super(props)
-        this.fakeCode = this.fakeCode.bind(this);
+        this.loadChatMessages = this.loadChatMessages.bind(this);
         this.getTokenfromlocalStorage = this.getTokenfromlocalStorage.bind(this);
         this.commitMessage = this.commitMessage.bind(this);
         this.handleTextInputBoxOnChange = this.handleTextInputBoxOnChange.bind(this);
@@ -40,37 +40,43 @@ export default class ChatSquare extends Component {
     static propTypes = {
         idFriend: PropTypes.string,
     }
-    fakeCode(idFriend, myId) {
-        return [
-            { id: idFriend, text: "mai đi nhậu không ?" },
-            { id: myId, text: "tao ốm rồi" },
-            { id: idFriend, text: "ốm cc" },
-            { id: idFriend, text: "suốt ngày bệnh" },
-            { id: idFriend, text: "cmmmmmm mmmmm mmmmmmm a mmmmmmm mmmmmmmmmmm mmmmmm a mmmmmmm mmmmmmmmmmmmmm a mmmmmmm mmmmmmmmmmmmmm a mmmmmmm mmmmmmmmmmmmmm a mmmmmmm mmmmmmmmmmmmm mmmmmmmmmmm" },
-        ]
-    }
-    fetchMessage(id) {
+    async loadChatMessages(idFriend) {
+        console.log(idFriend);
+        let messages;
+        if (idFriend == null) return []
+        else {
+            await axios.post(constant.server + "/message/load", {
+                token: this.getTokenfromlocalStorage(),
+                idFriend: idFriend
+            }).then(
+                res => {
+                    console.log(res.data);
+                    messages = res.data
+                }
+            ).catch(
+                error => {
+                    console.log(error);
+                }
+            )
+        }
+        return messages
 
     }
+
     getTokenfromlocalStorage() {
         var tokenEncoded = localStorage.getItem('token');
         var token = base64.decode(tokenEncoded);
         return token;
     }
-    connectSocket() {
-        return socket = openSocket(constant.server);
-    }
-    // call API method
-    sendMessage() {
+    // connectSocket() {
+    //     return socket = openSocket(constant.server);
+    // }
 
+    findLoadedChatIndex(idFriend, loadedChat) {
+        return loadedChat.indexOf(loadedChat.find(e => { return e.idFriend === idFriend }));
     }
-    findLoadedChatIndex(idFriend) {
-        var loadedChat = this.state.LoadedChat;
-        var elements = loadedChat.indexOf(loadedChat.find(e => { return e.idFriend === idFriend }));
-        return elements
-    }
-    addNewLoadedChat(idFriend) {
-        this.setState({
+    async addNewLoadedChat(idFriend) {
+        await this.setState({
             idFriend: idFriend,
             LoadedChat: [...this.state.LoadedChat, { idFriend: idFriend, chat_message: [] }]
         })
@@ -95,24 +101,36 @@ export default class ChatSquare extends Component {
 
     }
     // require idFriend for unasync state change
-    pushMessage(mess, idFriend) {
+    pushMessage(id, mess, date, idFriend) {
         var loaded = this.state.LoadedChat
         let index = loaded.indexOf(loaded.find(e => {
             return e.idFriend === idFriend
         }))
         loaded[index].chat_message.push({
-            id: this.props.myId,
+            id: id,
             text: mess,
+            date: date,
         })
         this.setState({
             LoadedChat: loaded,
         })
     }
-    async onReceiveMessage(idFriend, text) {
-        var bubbleList = document.getElementById('bubble-list-id');
+    async onReceiveMessage(data) {
+        console.log(data);
+        let id = data.id;
+        let text = data.text;
+        let date = data.date;
+        let idFriend;
+        if (data.id == this.props.myId || data.id == this.state.idFriend) {
+            idFriend = this.state.idFriend;
+        }
+        else {
+            idFriend = id
+        }        
+        var bubbleList = await document.getElementById('bubble-list-id');
         const bubbleListIsBottom = (bubbleList.scrollTop == (bubbleList.scrollHeight - bubbleList.clientHeight));
         /*** add to state ***/
-        await this.pushMessage(text, idFriend)
+        await this.pushMessage(id, text, date, idFriend)
         /***then scroll to bottom***/
         if (bubbleListIsBottom)
             await this.scrollBottom('bubble-list-id')
@@ -124,16 +142,11 @@ export default class ChatSquare extends Component {
             return
         }
         var bubbleList = document.getElementById('bubble-list-id');
-        const bubbleListIsBottom = (bubbleList.scrollTop == (bubbleList.scrollHeight - bubbleList.clientHeight));
         /*** call API to emit message ***/
         await this.emitMessageToSocket(this.state.idFriend, text)
         /*** add to state ***/
-        await this.pushMessage(text, this.state.idFriend)
         text_input.value = '';
         text_input.focus();
-        /***then scroll to bottom***/
-        if (bubbleListIsBottom)
-            await this.scrollBottom('bubble-list-id')
     }
     scrollBottom(elementId) {
         var element = document.getElementById(elementId);
@@ -154,14 +167,17 @@ export default class ChatSquare extends Component {
     }
 
     async componentDidMount() {
-        let idFriend = this.props.idFriend;
-        const token = this.getTokenfromlocalStorage();
+        let idFriend = await this.props.idFriend;
+        const token = await this.getTokenfromlocalStorage();
+        let loadChatMessages = await this.loadChatMessages(idFriend);
+        await console.log(idFriend);
+        await console.log(loadChatMessages);
         await this.setState({
             componentDidMount: true,
             LoadedChat: [
                 {
                     idFriend: idFriend,
-                    chat_message: this.fakeCode(idFriend, this.props.myId),
+                    chat_message: loadChatMessages,
                 }
             ]
         });
@@ -174,12 +190,17 @@ export default class ChatSquare extends Component {
     async componentDidUpdate(prevProps, prevState) {
         console.log('com did update');
         if (prevProps.idFriend !== this.props.idFriend) {
-            var new_idFriend = this.props.idFriend;
-            if (this.findLoadedChatIndex(new_idFriend) == -1) {
-                await this.addNewLoadedChat(this.props.idFriend)
+            let new_idFriend = this.props.idFriend;
+            if (this.findLoadedChatIndex(new_idFriend, this.state.LoadedChat) == -1) {
+                await this.addNewLoadedChat(new_idFriend);
+                let LoadedChat = await this.loadChatMessages(new_idFriend);
+                await this.setState({
+                    idFriend: new_idFriend,
+                    LoadedChat: LoadedChat,
+                })
             } else {
                 await this.setState({
-                    idFriend: this.props.idFriend,
+                    idFriend: new_idFriend,
                 })
                 await this.scrollBottom('bubble-list-id')
             }
@@ -191,15 +212,17 @@ export default class ChatSquare extends Component {
         console.log('com unmount');
     }
     _render_bubble(idFriend) {
-        var loadedChat = this.state.LoadedChat;
-        var elements = loadedChat[this.findLoadedChatIndex(idFriend)].chat_message.map(e => {
+        let loadedChat = this.state.LoadedChat;
+        if (loadedChat[this.findLoadedChatIndex(idFriend, loadedChat)].chat_message == undefined) return null;
+        return loadedChat[this.findLoadedChatIndex(idFriend, loadedChat)].chat_message.map(function (e) {
             return <ChatBubble
-                {...e}
+                key={e.id}
                 idFriend={idFriend}
-                key={loadedChat[this.findLoadedChatIndex(idFriend)].chat_message.indexOf(e)}
+                id={e.id}
+                text={e.text}
+                date={e.date}
             />
         })
-        return elements;
     }
     render() {
         var chat_bubble_list = null
@@ -210,7 +233,7 @@ export default class ChatSquare extends Component {
             <div className="chat-square">
                 <div className="chat-square__header">
                     <div className='chat-square__header__title'>
-                        Your friend name
+                        {this.props.friendName}
                     </div>
                     <CallButton className='chat-square__header__button'>
                         <i className="fas fa-phone"></i>
@@ -244,7 +267,7 @@ export default class ChatSquare extends Component {
                         </div>
                     </div>
                     <div className='chat-square__body__infomation'>
-                        <FriendInfo />
+                        <FriendInfo idFriend={this.props.idFriend} friendName={this.props.friendName}/>
                     </div>
                 </div>
             </div>

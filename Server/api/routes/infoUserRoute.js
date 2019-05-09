@@ -55,6 +55,7 @@ router.post('/edit/profile',fileUpload(), (req,res) => {
             info.firstName = req.body.firstName;
             info.lastName = req.body.lastName;
             info.gender = req.body.gender;
+            info.save();
             let img = req.files.img;
             img.mv('public/avatar/' + req.id + '.jpg');
             // console.log(info);

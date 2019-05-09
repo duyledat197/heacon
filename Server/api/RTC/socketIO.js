@@ -43,6 +43,25 @@ function initChatModel(id, idFriend, date) {
     })
 
 }
+
+function recordMessage(id, idFriend, idSend, text, date) {
+    // let idMessage = uid(10);
+
+
+    messageModel.findOne({ id: id }, (err, listfriend) => {
+        let indexFriend = listfriend.friend.findIndex((friend) => {
+            return friend.id === idFriend
+        })
+        let message = {
+            id: idSend,
+            text: text,
+            date: date
+        }
+        listfriend.friend[indexFriend].message.push(message);
+        listfriend.save((err) => { });
+
+    })
+}
 module.exports = function (io) {
     io.on('connection', (socket) => {
         // console.log('client connecting');
@@ -56,8 +75,8 @@ module.exports = function (io) {
                 return female.socketID != socket.id
             })
             let id = mapsocketID[socket.id];
-            delete mapsocketID[socket.id];
-            delete mapID[id];
+            mapsocketID[socket.id] = -1;
+            mapID[id] = -1;
         })
 
         // socket.on('authenticate', (data) => {
@@ -111,7 +130,7 @@ module.exports = function (io) {
                             var friendName = Male[0].name;
                             socket.emit('FIND_OUT', Male[0].id);
                             io.to(Male[0].socketID).emit('FIND_OUT', info.id);
-                            console.log(info.id);
+                            // console.log(info.id);
 
                             // console.log(Male[0].id);
 
@@ -129,89 +148,39 @@ module.exports = function (io) {
         })
         socket.on('CLIENT_CONNECT_MESSAGE', (data) => {
             console.log('CLIENT_CONNECT_MESSAGE:::');
-            console.log(data);
+            // console.log(data);
 
             jwt.verify(data.token, privateKey, (err, decoded) => {
                 if (err) socket.emit('ERROR', err);
                 else {
                     mapID[decoded.id] = socket.id;
                     mapsocketID[socket.id] = decoded.id;
+                    console.log(mapID);
+                    
                 }
             })
         })
         socket.on('CLIENT_SEND_MESSAGE', (data) => {
             console.log('CLIENT_SEND_MESSAGE:::');
-            console.log(data);
+            // console.log(data);
 
             jwt.verify(data.token, privateKey, (err, decoded) => {
                 if (err) socket.emit('ERROR', err);
                 else {
-                    let idMessage = uid(10);
-
                     let date = Date.now();
-                    messageModel.findOne({ id: data.message.idFriend }, (err, listfriend) => {
-                        if (err) socket.emit('ERROR', err);
-                        else {
-                            // let message = {
-                            //     id : idMessage,
-                            //     text : data.message.text,
-                            //     date : data.message.date
-                            // }
-                            console.log("listfriend::::");
-                            console.log(listfriend.friend);
+                    let message = {
+                        id: decoded.id,
+                        text: data.message.text,
+                        date: date
+                    }
+                    recordMessage(decoded.id, data.message.idFriend, decoded.id, data.message.text, date);
+                    recordMessage(data.message.idFriend, decoded.id, decoded.id, data.message.text, date);
+                    socket.emit('SEND_MESSAGE_TO_CLIENT', message);
+                    console.log(mapID);
+                    if(mapID[data.message.idFriend] !== -1)
+                        io.to(mapID[data.message.idFriend]).emit('SEND_MESSAGE_TO_CLIENT', message);
 
-
-                            listfriend.friend.findOne({ id: decoded.id }, (err, friend) => {
-                                if (err) socket.emit('ERROR', err);
-                                else {
-                                    let message = {
-                                        id: idMessage,
-                                        text: data.message.text,
-                                        date: date
-                                    }
-                                    friend.message.push(message);
-                                    listfriend.save((err) => {
-                                        if (err) socket.emit('ERROR', err);
-                                        else {
-                                            var message = {
-                                                id: decoded.id,
-                                                message: {
-                                                    id: data.message.idFriend,
-                                                    text: data.message.text
-                                                }
-                                            }
-                                            io.to(mapID[data.message.id]).emit('SEND_MESSAGE_TO_CLIENT', message);
-                                        }
-
-                                    });
-                                }
-
-                            })
-                        }
-                    })
-
-                    messageModel.find({ id: decoded.id }, (err, listfriend) => {
-                        if (err) socket.emit('ERROR', err);
-                        else {
-                            listfriend.friend.find({ id: data.message.id }, (err, friend) => {
-                                if (err) socket.emit('ERROR', err);
-                                else {
-                                    let message = {
-                                        id: idMessage,
-                                        text: data.message.text,
-                                        date: data.message.date
-                                    }
-                                    friend.message.push(message);
-                                    listfriend.save((err) => {
-                                        if (err) socket.emit('ERROR', err);
-                                        else socket.emit('SEND_DATA_SUCCESS', { success: true });
-                                    });
-                                }
-                            })
-                        }
-                    })
                 }
-
             })
         })
     })

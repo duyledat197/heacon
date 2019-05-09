@@ -8,32 +8,48 @@ var authenticate = require('./authenticateRoute');
 var friendModel = require('./../../models/friendModel');
 router.use(authenticate);
 router.post('/friends', (req, res) => {
-    friendModel.findOne({id : req.id}).then(data => {
-        console.log(data);
+    friendModel.findOne({ id: req.id }).then(data => {
         res.status(200).json(data);
     }).catch(err => {
         res.status(500).json(err);
+
+    })
+})
+router.post('/load', (req, res) => {
+    console.log("LOAD_MESSAGE__::::");
+    
+    // console.log(req.id);
+    
+    messageModel.findOne({ id: req.id }, (err, listFriend) => {
+        // console.log(listFriend);
+        
+        if (!err) {
+            let indexFriend = listFriend.friend.findIndex((friend) => {
+                return friend.id === req.body.idFriend
+            })
+            // console.log(indexFriend);
+            // console.log(req.body.idFriend);
+            
+            // console.log("listFriend.friend[indexFriend]");
+            // console.log(listFriend.friend[indexFriend]);
+            
+            let length_array = listFriend.friend[indexFriend].message.length;
+            var array_message;
+            if (length_array < 10) {
+                array_message = listFriend.friend[indexFriend].message;
+            }
+            else {
+                array_message = listFriend.friend[indexFriend].message.slice(length_array - 10, length_array - 1);
+            }
+            res.status(200).json(array_message);
+        }
+        else res.status(500).json(err);
     })
 })
 
 router.post('/p', (req, res) => {
-   
-    if(req.err) res.status(500).json(err);
-    else {
-        messageModel.find({ id : req.body.id}).then( messageInfo => {
-            messageInfo.friend.find({id : req.idfriend}).then(friend => {
-                // var message = friend.message;
-                friend.message.find({}).last(10).then(message => {
-                    res.status(200).json(message);
-                }).catch(err => {
-                    res.status(500).json(err);
-                })  
-            }).catch(err => {
-                res.status(500).json(err);
-            })
-        })
-    }
-      
+
+
 })
 
 module.exports = router;

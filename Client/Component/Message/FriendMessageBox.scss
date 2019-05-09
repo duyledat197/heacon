@@ -23,14 +23,19 @@ $avatar-size: $friend-message-box-min-height * 0.8;
     border: 3px dashed white;
   }
   &__avatar {
-    display: block;
+    display: flex;
     border-radius: 50%;
     min-width: 50px;
     width: 3rem;
     min-height: 50px;
     height: 3rem;
-    border: 1px solid lightpink;
     box-shadow: 0 0 0 lightpink;
+    justify-content: center;
+    align-items: center;
+    i{
+      font-size: 50px;
+      color: white;
+    }
   }
   &__info {
     display: flex;
