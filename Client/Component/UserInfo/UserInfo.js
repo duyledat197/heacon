@@ -30,17 +30,28 @@ class UserInfo extends Component {
     handleUpdateInfo(e){
         e.preventDefault();
         // console.log(e.target.gender.value);
-        
-        let data = {
-            token,
-            firstName : e.target.firstName.value,
-            lastName : e.target.lastName.value,
-            gender : e.target.gender.value,
-            birthday : e.target.birthday.value,
-            img : e.target.image_uploads.files
+        let formData = new FormData();
+        formData.append('img', e.target.image_uploads.files[0]);
+        formData.set('token', this.state.token);
+        formData.set('firstName', e.target.firstName.value);
+        formData.set('lastName', e.target.lastName.value);
+        formData.set('gender', e.target.gender.value);
+        formData.set('birthday', e.target.birthday.value);
+        // let data = {
+        //     token : this.state.token,
+        //     firstName : e.target.firstName.value,
+        //     lastName : e.target.lastName.value,
+        //     gender : e.target.gender.value,
+        //     birthday : e.target.birthday.value,
+            
 
-        }
-        axios.post(constant.server + '/edit/profile', {data}).then(resp => {
+        // }
+        axios({
+            method : "POST",
+            data : formData,
+            url: constant.server + '/info/edit/profile',
+            config: { headers: {'Content-Type': 'multipart/form-data' }}
+        }).then(resp => {
             console.log(resp);
             
         }).catch(err => {

@@ -5,7 +5,7 @@ var infoUserModel = require('./../../models/infoUserModel');
 var authenticate = require('./authenticateRoute');
 
 router.use(authenticate);
-router.use('/edit/profile', fileUpload());
+// router.use('/edit/profile', );
 router.post('/',(req,res) => {
     // console.log(req.error);
     
@@ -35,8 +35,12 @@ router.post('/friend',(req,res) => {
         }  
     })
 })
-
-router.post('/edit/profile', (req,res) => {
+// 
+router.post('/edit/profile',fileUpload(), (req,res) => {
+    console.log(req.id);
+    console.log(req.err);
+    
+    
     infoUserModel.findOne({id : req.id}, (err, info) => {
         if(err) res.status(500).json(err);
         else {
