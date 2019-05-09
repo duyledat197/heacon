@@ -24,17 +24,17 @@ router.post('/',(req,res) => {
         })
     }
 })
-router.post('/friend',(req,res) => {
-    infoUserModel.findOne({id : req.idFriend}, (err, info) => {
-        if(err) res.status(500).json(err);
-        else {
+// router.post('/friend',(req,res) => {
+//     infoUserModel.findOne({id : req.idFriend}, (err, info) => {
+//         if(err) res.status(500).json(err);
+//         else {
            
             
-            res.status(200).json(info);
-            // console.log(info);
-        }  
-    })
-})
+//             res.status(200).json(info);
+//             // console.log(info);
+//         }  
+//     })
+// })
 // 
 router.post('/edit/profile',fileUpload(), (req,res) => {
     console.log(req.id);

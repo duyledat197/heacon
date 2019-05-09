@@ -12,22 +12,14 @@ router.post('/', (req, res) => {
         bcrypt.compare(req.body.password, user.password , (err, resq) =>{
             if(!err) {
                 console.log(resq);
-                if(resq) {
-                //    var tokenn =  jwt.sign({exp: Math.floor(Date.now() / 1000) + (60 * 60), data : user.id }, "privateKey")
+                if(resq) {                
                 jwt.sign({
                     id : user.id
                   }, privateKey , { expiresIn: Math.floor(Date.now() / 1000) + (60 * 60) }, (errr,token) => {
                         if(!errr) res.status(200).json({token : token, success : true});
                         else res.status(500).json(erer);
                     
-                  });
-                //    (errr, token) => {
-                    // , { algorithm: 'RS256' }
-                    //     if(!errr) res.status(200).json({token : token, success : true});
-                    //     else res.status(500).json(errr);
-                    //   });
-                    //   console.log(token);
-                      
+                  });                                  
                 }
                 else res.status(500).json({success : false, text : "Sai Tài Khoản hoặc Mật Khẩu"});
             }

@@ -22,7 +22,8 @@ class UserInfo extends Component {
         axios.post(constant.server + '/info', {token}).then(resp =>{
             this.setState({
                 img_url : constant.server + '/avatar/' + resp.data.id + '.jpg',
-                token : token
+                token : token,
+                
             })
         })
 
