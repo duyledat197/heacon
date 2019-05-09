@@ -68,9 +68,9 @@ export default class ChatSquare extends Component {
         var token = base64.decode(tokenEncoded);
         return token;
     }
-    connectSocket() {
-        return socket = openSocket(constant.server);
-    }
+    // connectSocket() {
+    //     return socket = openSocket(constant.server);
+    // }
 
     findLoadedChatIndex(idFriend, loadedChat) {
         return loadedChat.indexOf(loadedChat.find(e => { return e.idFriend === idFriend }));
