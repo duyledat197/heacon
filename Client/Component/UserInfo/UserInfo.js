@@ -27,6 +27,24 @@ class UserInfo extends Component {
         })
 
     }
+    createImage(file) {
+        var image = new Image();
+        var reader = new FileReader();
+        var vm = this;
+  
+        reader.onload = (e) => {
+          this.setState({
+              img_url : e.target.result
+          })
+        };
+        reader.readAsDataURL(file);
+    }
+    changeImage(e) {
+        var files = e.target.files || e.dataTransfer.files;
+      if (!files.length)
+        return;
+      this.createImage(files[0]);
+    }
     handleUpdateInfo(e){
         e.preventDefault();
         // console.log(e.target.gender.value);
@@ -79,7 +97,7 @@ class UserInfo extends Component {
                 <div className="row">
                     <div className="side">                        
                         <img src={ this.state.img_url } alt="avatar" />
-                        <button className="userInfo-button" value="Change avatar">  <input type="file" id="file_image" name="image_uploads" /></button>
+                        <button className="userInfo-button" value="Change avatar">  <input type="file" id="file_image" name="image_uploads" onChange={(e) => this.changeImage(e)}/></button>
                     </div>
                     <div className="userInfo-content">
                         <div classNam="userInfo-name">
