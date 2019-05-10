@@ -64,9 +64,6 @@ function recordMessage(id, idFriend, idSend, text, date) {
 }
 module.exports = function (io) {
     io.on('connection', (socket) => {
-        // console.log('client connecting');
-        // console.log(socket.id);
-
         socket.on('disconnected', () => {
             Male = Male.filter((male) => {
                 return male.socketID != socket.id
@@ -78,34 +75,14 @@ module.exports = function (io) {
             mapsocketID[socket.id] = -1;
             mapID[id] = -1;
         })
-
-        // socket.on('authenticate', (data) => {
-        //     console.log(data.token); 
-        //     jwt.verify(data.token, privateKey, (err, decoded) =>{
-        //         if(err) socket.emit('ERROR', err);
-        //         else {
-        //             socket.id = decoded;
-        //             socket.emit('ID_USER',decoded);
-        //         }
-        //     })
-        // })
         socket.on('FIND_LOVER', (idd) => {
-            console.log(idd);
-            // socket.io.engine.id = id;
-            // console.log(socket.io.engine.id);
-            // socketID.find
             infoUserModel.findOne({ 'id': idd }, (err, info) => {
                 if (err) socket.emit('ERROR', err);
                 else {
-                    // console.log(info);
-
                     var gender = info.gender;
                     var lastTime = Date.now();
-                    // console.log("gender" + gender);
-
                     if (gender == 'male') {
                         if (Female.length > 0) {
-                            // console.log( 'female : ' + Female[0]);
                             var friendId = Female[0].id;
                             var friendName = Female[0].name;
                             socket.emit('FIND_OUT', Female[0].id);
@@ -114,7 +91,7 @@ module.exports = function (io) {
                             initFriendModel(info.id, friendId, friendName, lastTime);
                             initChatModel(info.id, friendId, lastTime);
 
-                            initFriendModel(friendId, info.id, friendName, lastTime);
+                            initFriendModel(friendId, info.id, info.firstName + " " + info.lastName, lastTime);
                             initChatModel(friendId, info.id, lastTime);
                         }
                         else Male.push({
@@ -125,7 +102,6 @@ module.exports = function (io) {
                     }
                     else {
                         if (Male.length > 0) {
-                            // console.log('male :' + Male[0].id);
                             var friendId = Male[0].id;
                             var friendName = Male[0].name;
                             socket.emit('FIND_OUT', Male[0].id);
@@ -137,7 +113,7 @@ module.exports = function (io) {
                             initFriendModel(info.id, friendId, friendName, lastTime);
                             initChatModel(info.id, friendId, lastTime);
 
-                            initFriendModel(friendId, info.id, friendName, lastTime);
+                            initFriendModel(friendId, info.id, info.firstName + " " + info.lastName, lastTime);
                             initChatModel(friendId, info.id, lastTime);
                             Male.shift();
                         }
