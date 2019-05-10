@@ -42,7 +42,7 @@ class Header extends Component {
                     >
                         <img src="./static/Atommk.jpg" className="friend-message-avatar" />
                         <div className={"header-setting-menu" + (this.state.header_info_menu ? "" : " disable")}>
-                            <p className="setting-button">Information</p>
+                            <p className="setting-button"><a href="/userinfo">Information </a></p>
                             <p className="setting-button">Profile</p>
                             <p className="setting-button" onClick={() => this.props.handleLogout()}>Logout</p>
                         </div>
