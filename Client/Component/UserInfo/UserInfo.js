@@ -9,9 +9,30 @@ class UserInfo extends Component {
         super(props);
         this.state = {
             img_url : '',
-            token : ''
+            token : '',
+           firstName : '',
+           lastName : '',
+           gender : '',
+          birthday: ''
         }
     }
+
+    handleChangelastName = (e) => {
+        this.setState({lastName: e.target.value});
+    }
+
+    handleChangefirstName = (e) => {
+        this.setState({firstName: e.target.value});
+    }
+
+    handleChangeGender = (e) => {
+        this.setState({gender: e.target.value});
+    }
+
+    handleChangeBirthday = (e) => {
+        this.setState({birthday: e.target.value});
+    }
+
     getToken() {
         var tokenEncoded = localStorage.getItem('token');
         var token = base64.decode(tokenEncoded);
@@ -23,7 +44,10 @@ class UserInfo extends Component {
             this.setState({
                 img_url : constant.server + '/avatar/' + resp.data.id + '.jpg',
                 token : token,
-                
+                firstName : resp.data.firstName,
+                lastName : resp.data.lastName,
+                gender: resp.data.gender,
+                birthday: resp.data.birthday
             })
         })
 
@@ -104,11 +128,11 @@ class UserInfo extends Component {
                         <div classNam="userInfo-name">
                             <div className="userInfo-line">
                                 <div className="userInfo-text">Họ:</div>
-                                <input className="userInfo-input" id="ho" name="lastName"/>
+                                <input className="userInfo-input" id="ho" name="lastName" value={this.state.lastName} onChange={this.handleChangelastName}/>
                             </div>
                             <div className="userInfo-line">
                                 <div className="userInfo-text">Tên:</div>
-                                <input className="userInfo-input" id="ten" name="firstName" />
+                                <input className="userInfo-input" id="ten" name="firstName" value={this.state.firstName} onChange={this.handleChangefirstName}/>
                             </div>
                         </div>                        
                         <div className="userInfo-gender">
@@ -120,7 +144,7 @@ class UserInfo extends Component {
                         </div>
                         <div className="userInfo-line">
                             <div className="userInfo-text">Ngày sinh:</div>
-                            <input className="userInfo-input" type="date" id="ngaysinh" name="birthday"/>
+                            <input className="userInfo-input" type="date" id="ngaysinh" name="birthday" value={this.state.birthday} onChange={this.handleChangeBirthday}/>
                         </div>
                         <button className="userInfo-button" type="submit" >Cập nhật</button>
                     </div>
