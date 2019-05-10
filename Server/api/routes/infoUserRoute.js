@@ -7,9 +7,9 @@ var authenticate = require('./authenticateRoute');
 router.use(authenticate);
 router.use('/edit/profile', fileUpload());
 router.post('/',(req,res) => {
-    // console.log(req.error);
+    // console.log(req.error); .json(error);
     
-    if(req.error) res.status(500).json(error);
+    if(req.error) res.status(500)
     else {
         // console.log(req.id);
         infoUserModel.findOne({id : req.id}, (err, info) => {
