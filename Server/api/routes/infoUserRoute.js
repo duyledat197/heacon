@@ -5,11 +5,11 @@ var infoUserModel = require('./../../models/infoUserModel');
 var authenticate = require('./authenticateRoute');
 
 router.use(authenticate);
-router.use('/edit/profile', fileUpload());
+// router.use('/edit/profile', );
 router.post('/',(req,res) => {
-    // console.log(req.error);
+    // console.log(req.error); .json(error);
     
-    if(req.error) res.status(500).json(error);
+    if(req.error) res.status(500)
     else {
         // console.log(req.id);
         infoUserModel.findOne({id : req.id}, (err, info) => {
@@ -24,19 +24,23 @@ router.post('/',(req,res) => {
         })
     }
 })
-router.post('/friend',(req,res) => {
-    infoUserModel.findOne({id : req.idFriend}, (err, info) => {
-        if(err) res.status(500).json(err);
-        else {
+// router.post('/friend',(req,res) => {
+//     infoUserModel.findOne({id : req.idFriend}, (err, info) => {
+//         if(err) res.status(500).json(err);
+//         else {
            
             
-            res.status(200).json(info);
-            // console.log(info);
-        }  
-    })
-})
-
-router.post('/edit/profile', (req,res) => {
+//             res.status(200).json(info);
+//             // console.log(info);
+//         }  
+//     })
+// })
+// 
+router.post('/edit/profile',fileUpload(), (req,res) => {
+    console.log(req.id);
+    console.log(req.err);
+    
+    
     infoUserModel.findOne({id : req.id}, (err, info) => {
         if(err) res.status(500).json(err);
         else {
